@@ -16,10 +16,10 @@
                         <h1 class="mt-2 text-3xl font-semibold tracking-tight">Search Results</h1>
                         <p class="mt-2 text-sm text-reka-text-muted">Showing 24 results for “living room”</p>
                     </div>
-                    <div class="flex w-full max-w-xl items-center rounded-full border border-reka-border bg-reka-surface px-4 py-3 shadow-sm">
+                    <form action="{{ route('search') }}" method="GET" class="flex w-full max-w-xl items-center rounded-full border border-reka-border bg-reka-surface px-4 py-3 shadow-sm">
                         <svg class="mr-3 h-5 w-5 text-reka-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" value="living room" class="w-full bg-transparent text-sm outline-none" />
-                    </div>
+                        <input type="text" name="query" value="{{ $query ?? '' }}" class="w-full bg-transparent text-sm outline-none" />
+                    </form>
                 </div>
             </div>
 
@@ -72,61 +72,29 @@
                     </div>
 
                     <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                        <article class="group overflow-hidden rounded-[28px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
-                            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80" alt="VIMLE Sofa" class="h-52 w-full object-cover transition duration-500 group-hover:scale-105">
-                            <div class="p-5">
-                                <h3 class="text-lg font-semibold">VIMLE Sofa</h3>
-                                <p class="mt-1 text-sm text-reka-text-muted">Comfortable 3-seat sofa</p>
-                                <div class="mt-3 flex items-center justify-between">
-                                    <p class="text-base font-semibold text-reka-blue">Rp 8,499,000</p>
-                                    <span class="text-sm text-reka-text-muted">★ 4.8</span>
+                        @forelse($products as $slug => $product)
+                            <article class="group overflow-hidden rounded-[28px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
+                                <a href="{{ route('product-detail', ['slug' => $slug]) }}"><img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="h-52 w-full object-cover transition duration-500 group-hover:scale-105"></a>
+                                <div class="p-5">
+                                    <h3 class="text-lg font-semibold"><a href="{{ route('product-detail', ['slug' => $slug]) }}" class="hover:text-reka-blue">{{ $product['name'] }}</a></h3>
+                                    <p class="mt-1 text-sm text-reka-text-muted">{{ $product['description'] }}</p>
+                                    <div class="mt-3 flex items-center justify-between">
+                                        <p class="text-base font-semibold text-reka-blue">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
+                                        <span class="text-sm text-reka-text-muted">★ {{ $product['rating'] }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
-
-                        <article class="group overflow-hidden rounded-[28px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
-                            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="BJÖRKUDDEN Table" class="h-52 w-full object-cover transition duration-500 group-hover:scale-105">
-                            <div class="p-5">
-                                <h3 class="text-lg font-semibold">BJÖRKUDDEN Table</h3>
-                                <p class="mt-1 text-sm text-reka-text-muted">Solid oak dining table</p>
-                                <div class="mt-3 flex items-center justify-between">
-                                    <p class="text-base font-semibold text-reka-blue">Rp 8,999,000</p>
-                                    <span class="text-sm text-reka-text-muted">★ 4.6</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="group overflow-hidden rounded-[28px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
-                            <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80" alt="Lounge Chair" class="h-52 w-full object-cover transition duration-500 group-hover:scale-105">
-                            <div class="p-5">
-                                <h3 class="text-lg font-semibold">Lounge Chair</h3>
-                                <p class="mt-1 text-sm text-reka-text-muted">Soft lounge chair</p>
-                                <div class="mt-3 flex items-center justify-between">
-                                    <p class="text-base font-semibold text-reka-blue">Rp 2,450,000</p>
-                                    <span class="text-sm text-reka-text-muted">★ 4.9</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="group overflow-hidden rounded-[28px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
-                            <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80" alt="Sideboard" class="h-52 w-full object-cover transition duration-500 group-hover:scale-105">
-                            <div class="p-5">
-                                <h3 class="text-lg font-semibold">Sideboard</h3>
-                                <p class="mt-1 text-sm text-reka-text-muted">Compact storage solution</p>
-                                <div class="mt-3 flex items-center justify-between">
-                                    <p class="text-base font-semibold text-reka-blue">Rp 5,780,000</p>
-                                    <span class="text-sm text-reka-text-muted">★ 4.7</span>
-                                </div>
-                            </div>
-                        </article>
+                            </article>
+                        @empty
+                            <div class="col-span-full rounded-[24px] border border-dashed border-reka-border bg-white p-8 text-center text-reka-text-muted">No products matched your search. Try a different term.</div>
+                        @endforelse
                     </div>
 
                     <div class="mt-8 flex flex-wrap items-center justify-center gap-2">
-                        <a href="#" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">Previous</a>
-                        <a href="#" class="rounded-full bg-reka-blue px-3 py-2 text-sm font-semibold text-white">1</a>
-                        <a href="#" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">2</a>
-                        <a href="#" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">3</a>
-                        <a href="#" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">Next</a>
+                        <a href="{{ route('category') }}" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">Previous</a>
+                        <a href="{{ route('category') }}" class="rounded-full bg-reka-blue px-3 py-2 text-sm font-semibold text-white">1</a>
+                        <a href="{{ route('category') }}" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">2</a>
+                        <a href="{{ route('category') }}" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">3</a>
+                        <a href="{{ route('category') }}" class="rounded-full border border-reka-border px-3 py-2 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">Next</a>
                     </div>
                 </section>
             </div>

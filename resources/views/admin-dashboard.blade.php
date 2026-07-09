@@ -119,7 +119,7 @@
                     <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.05)]">
                         <div class="flex items-center justify-between">
                             <h2 class="text-xl font-semibold">Recent Orders</h2>
-                            <a href="#" class="text-sm font-medium text-sky-700">View all</a>
+                            <a href="{{ route('orders') }}" class="text-sm font-medium text-sky-700">View all</a>
                         </div>
                         <div class="mt-5 space-y-3">
                             <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
@@ -149,7 +149,7 @@
                     <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.05)]">
                         <div class="flex items-center justify-between">
                             <h2 class="text-xl font-semibold">Top Selling Products</h2>
-                            <a href="#" class="text-sm font-medium text-sky-700">Manage</a>
+                            <a href="{{ route('category') }}" class="text-sm font-medium text-sky-700">Manage</a>
                         </div>
                         <div class="mt-5 space-y-3">
                             <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">

@@ -16,12 +16,15 @@
                 </a>
 
                 <nav class="mt-8 space-y-2">
-                    <a href="#" class="flex items-center gap-3 rounded-2xl bg-reka-blue px-4 py-3 text-sm font-semibold text-white">📊 Dashboard</a>
-                    <a href="#" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">🛍️ Orders</a>
-                    <a href="#" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">♡ Wishlist</a>
-                    <a href="#" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">👤 Profile</a>
-                    <a href="#" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">📍 Addresses</a>
-                    <a href="#" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">↩️ Logout</a>
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-2xl bg-reka-blue px-4 py-3 text-sm font-semibold text-white">📊 Dashboard</a>
+                    <a href="{{ route('orders') }}" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">🛍️ Orders</a>
+                    <a href="{{ route('wishlist') }}" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">♡ Wishlist</a>
+                    <a href="{{ route('profile') }}" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">👤 Profile</a>
+                    <a href="{{ route('support') }}" class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">📍 Support</a>
+                    <form action="{{ route('logout') }}" method="POST" class="w-full">
+                        @csrf
+                        <button type="submit" class="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-reka-text-secondary transition hover:bg-reka-surface">↩️ Logout</button>
+                    </form>
                 </nav>
             </aside>
 
@@ -45,7 +48,7 @@
                         <div class="rounded-[28px] border border-reka-border bg-white p-6 shadow-[0_12px_35px_rgba(17,17,17,0.06)]">
                             <div class="flex items-center justify-between">
                                 <h2 class="text-xl font-semibold">Recent Orders</h2>
-                                <a href="#" class="text-sm font-medium text-reka-blue">View all</a>
+                                <a href="{{ route('orders') }}" class="text-sm font-medium text-reka-blue">View all</a>
                             </div>
                             <div class="mt-5 space-y-3">
                                 <div class="flex items-center justify-between rounded-2xl bg-reka-surface px-4 py-3">
@@ -68,7 +71,7 @@
                         <div class="rounded-[28px] border border-reka-border bg-white p-6 shadow-[0_12px_35px_rgba(17,17,17,0.06)]">
                             <div class="flex items-center justify-between">
                                 <h2 class="text-xl font-semibold">Wishlist Summary</h2>
-                                <a href="#" class="text-sm font-medium text-reka-blue">Open wishlist</a>
+                                <a href="{{ route('wishlist') }}" class="text-sm font-medium text-reka-blue">Open wishlist</a>
                             </div>
                             <div class="mt-5 grid gap-3 sm:grid-cols-2">
                                 <div class="rounded-2xl bg-reka-surface p-4">

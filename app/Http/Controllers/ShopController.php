@@ -86,6 +86,10 @@ class ShopController extends Controller
             'color' => ['nullable', 'string'],
         ]);
 
+        if ($request->user()?->isAdmin()) {
+            return redirect()->route('admin-dashboard');
+        }
+
         $product = $this->products[$data['product_slug']] ?? null;
         if (!$product) {
             return back()->withErrors(['product' => 'Product not found.']);
@@ -156,6 +160,10 @@ class ShopController extends Controller
             return redirect()->route('login')->with('checkout_required', true);
         }
 
+        if (Auth::user()->isAdmin()) {
+            return redirect()->route('admin-dashboard');
+        }
+
         $cart = $this->getCart();
         $items = $cart['items'] ?? [];
         if (empty($items)) {
@@ -174,6 +182,10 @@ class ShopController extends Controller
     {
         if (!Auth::check()) {
             return redirect()->route('login');
+        }
+
+        if (Auth::user()->isAdmin()) {
+            return redirect()->route('admin-dashboard');
         }
 
         $data = $request->validate([
@@ -218,7 +230,7 @@ class ShopController extends Controller
 
     public function orderConfirmation(Order $order)
     {
-        if (!Auth::check() || $order->user_id !== Auth::id()) {
+        if (!Auth::check() || $order->user_id !== Auth::id() || Auth::user()->isAdmin()) {
             abort(403);
         }
 
@@ -227,9 +239,39 @@ class ShopController extends Controller
 
     public function orderHistory()
     {
-        $orders = Auth::check() ? Order::where('user_id', Auth::id())->latest()->get() : collect();
+        if (!Auth::check() || Auth::user()->isAdmin()) {
+            abort(403);
+        }
+
+        $orders = Order::where('user_id', Auth::id())->latest()->get();
 
         return view('orders', ['orders' => $orders]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = trim((string) $request->input('query', ''));
+        $products = $this->products;
+
+        if ($query !== '') {
+            $needle = mb_strtolower($query);
+            $products = array_filter($products, function (array $product) use ($needle): bool {
+                $haystack = mb_strtolower(implode(' ', [
+                    $product['name'] ?? '',
+                    $product['description'] ?? '',
+                    $product['slug'] ?? '',
+                    implode(' ', $product['colors'] ?? []),
+                    implode(' ', $product['sizes'] ?? []),
+                ]));
+
+                return str_contains($haystack, $needle);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        return view('search', [
+            'products' => $products,
+            'query' => $query,
+        ]);
     }
 
     public function wishlist()
@@ -285,8 +327,13 @@ class ShopController extends Controller
         if (Auth::attempt($data)) {
             $request->session()->regenerate();
             $this->mergeGuestCart();
-            $redirectTo = Session::get('checkout_required') ? '/checkout' : '/cart';
             Session::forget('checkout_required');
+
+            if (Auth::user()->isAdmin()) {
+                return redirect()->intended(route('admin-dashboard'))->with('success', 'Welcome back!');
+            }
+
+            $redirectTo = Session::get('checkout_required') ? '/checkout' : '/cart';
             return redirect()->intended($redirectTo)->with('success', 'Welcome back!');
         }
 
@@ -296,6 +343,40 @@ class ShopController extends Controller
     public function registerView()
     {
         return view('register');
+    }
+
+    public function dashboard()
+    {
+        return view('dashboard', ['user' => Auth::user()]);
+    }
+
+    public function profile()
+    {
+        return view('profile', ['user' => Auth::user()]);
+    }
+
+    public function settings()
+    {
+        return view('profile', ['user' => Auth::user()]);
+    }
+
+    public function adminDashboard()
+    {
+        return view('admin-dashboard');
+    }
+
+    public function support()
+    {
+        return view('support');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')->with('success', 'You have been logged out.');
     }
 
     public function register(Request $request)
@@ -314,6 +395,10 @@ class ShopController extends Controller
 
         Auth::login($user);
         $this->mergeGuestCart();
+
+        if ($user->isAdmin()) {
+            return redirect()->route('admin-dashboard')->with('success', 'Account created successfully.');
+        }
 
         return redirect('/cart')->with('success', 'Account created successfully.');
     }

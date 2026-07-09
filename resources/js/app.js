@@ -75,9 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     wishlistButtons.forEach((btn) => {
         btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
             const isActive = btn.classList.toggle('active');
             const heartIcon = btn.querySelector('svg');
 
@@ -106,10 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartCount = document.getElementById('cart-count');
 
     addToCartButtons.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
+        btn.addEventListener('click', () => {
             const originalHTML = btn.innerHTML;
             const originalClasses = btn.className;
 

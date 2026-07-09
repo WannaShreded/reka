@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="REKA - Modern Scandinavian Furniture & Home Decor inspired by IKEA. Functional, sustainable, and beautiful.">
-    
+
     <title>REKA - Modern Scandinavian Furniture</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -108,7 +108,7 @@
         <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1920&q=80" alt="Scandinavian living room layout" class="absolute inset-0 w-full h-full object-cover">
         <!-- Gradient Overlay -->
         <div class="absolute inset-0 hero-gradient"></div>
-        
+
         <!-- Content -->
         <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
             <div data-animate class="max-w-xl text-white">
@@ -220,7 +220,7 @@
                             <a href="/product/vimle">VIMLE Sofa</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Comfortable 3-seat sofa in Gunnared beige fabric.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -232,7 +232,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.5 (126)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <span class="text-xl font-bold text-reka-text">Rp 8,499,000</span>
                             <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -256,7 +256,7 @@
                             <a href="#">BJÖRKUDDEN Table</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Solid wood dining table, seats 4 comfortably.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -268,7 +268,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.0 (89)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <span class="text-xl font-bold text-reka-text">Rp 2,199,000</span>
                             <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -293,7 +293,7 @@
                             <a href="#">STRANDMON Chair</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Classic wing chair with deep, soft velvet cushion.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -305,7 +305,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.8 (234)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <div>
                                 <span class="text-xs text-reka-text-muted line-through block leading-none">Rp 4,999,000</span>
@@ -332,7 +332,7 @@
                             <a href="#">KALLAX Shelf</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Versatile 4x4 shelving unit, white oak effect.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -344,7 +344,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.3 (167)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <span class="text-xl font-bold text-reka-text">Rp 1,299,000</span>
                             <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -380,7 +380,7 @@
                         <a href="#">MALM Desk</a>
                     </h3>
                     <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Minimalist study desk with built-in side drawers.</p>
-                    
+
                     <!-- Rating -->
                     <div class="flex items-center gap-1 mt-3">
                         <div class="flex text-reka-yellow">
@@ -392,7 +392,7 @@
                         </div>
                         <span class="text-xs text-reka-text-muted ml-1">4.6 (312)</span>
                     </div>
-                    
+
                     <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                         <span class="text-xl font-bold text-reka-text">Rp 2,599,000</span>
                         <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -417,7 +417,7 @@
                         <a href="#">POÄNG Armchair</a>
                     </h3>
                     <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Laminated bent birch frame armchair with comfortable support.</p>
-                    
+
                     <!-- Rating -->
                     <div class="flex items-center gap-1 mt-3">
                         <div class="flex text-reka-yellow">
@@ -429,7 +429,7 @@
                         </div>
                         <span class="text-xs text-reka-text-muted ml-1">4.7 (456)</span>
                     </div>
-                    
+
                     <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                         <span class="text-xl font-bold text-reka-text">Rp 1,799,000</span>
                         <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -453,7 +453,7 @@
                         <a href="#">HEMNES Dresser</a>
                     </h3>
                     <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">White stain solid pine chest of 8 drawers. Classic style.</p>
-                    
+
                     <!-- Rating -->
                     <div class="flex items-center gap-1 mt-3">
                         <div class="flex text-reka-yellow">
@@ -465,7 +465,7 @@
                         </div>
                         <span class="text-xs text-reka-text-muted ml-1">4.4 (198)</span>
                     </div>
-                    
+
                     <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                         <span class="text-xl font-bold text-reka-text">Rp 4,299,000</span>
                         <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -489,7 +489,7 @@
                         <a href="#">LACK Side Table</a>
                     </h3>
                     <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Ultra-lightweight side table, easy to assemble and move.</p>
-                    
+
                     <!-- Rating -->
                     <div class="flex items-center gap-1 mt-3">
                         <div class="flex text-reka-yellow">
@@ -501,7 +501,7 @@
                         </div>
                         <span class="text-xs text-reka-text-muted ml-1">4.2 (543)</span>
                     </div>
-                    
+
                     <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                         <span class="text-xl font-bold text-reka-text">Rp 299,000</span>
                         <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -581,7 +581,7 @@
                             <a href="#">ÄPPLARÖ Outdoor Set</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Durable wooden table and 2 folding chairs, pre-treated stain.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -593,7 +593,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.1 (45)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <span class="text-xl font-bold text-reka-text">Rp 5,799,000</span>
                             <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -618,7 +618,7 @@
                             <a href="#">STOCKHOLM Table</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Walnut veneer coffee table with elliptical shapes.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -630,7 +630,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.9 (12)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <span class="text-xl font-bold text-reka-text">Rp 3,499,000</span>
                             <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -655,7 +655,7 @@
                             <a href="#">BRIMNES TV Unit</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">TV cabinet bench with large drawers for storage solutions.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -667,7 +667,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.3 (67)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <span class="text-xl font-bold text-reka-text">Rp 1,899,000</span>
                             <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -692,7 +692,7 @@
                             <a href="#">NORDEN Dining Table</a>
                         </h3>
                         <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Solid birch extension table. Elegant and sturdy.</p>
-                        
+
                         <!-- Rating -->
                         <div class="flex items-center gap-1 mt-3">
                             <div class="flex text-reka-yellow">
@@ -704,7 +704,7 @@
                             </div>
                             <span class="text-xs text-reka-text-muted ml-1">4.5 (23)</span>
                         </div>
-                        
+
                         <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
                             <span class="text-xl font-bold text-reka-text">Rp 6,299,000</span>
                             <button class="add-to-cart-btn inline-flex items-center gap-1.5 bg-reka-blue text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-reka-blue-dark transition-all" aria-label="Add to Cart">
@@ -807,7 +807,7 @@
                 <svg class="w-12 h-12 text-reka-yellow animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 <h2 class="text-3xl font-bold mt-6 tracking-tight">Join the Family</h2>
                 <p class="text-white/80 mt-3 max-w-sm">Subscribe to get 10% off your first purchase, design inspiration, and special member sales.</p>
-                
+
                 <form id="newsletter-form" class="mt-8 flex w-full max-w-md bg-white rounded-lg p-1.5 shadow-lg border border-white/20">
                     <input type="email" required placeholder="Enter your email address" class="flex-grow pl-4 pr-2 py-3.5 bg-transparent border-none text-reka-text text-sm placeholder:text-gray-400 focus:outline-none w-full" aria-label="Email Address">
                     <button type="submit" class="bg-reka-blue hover:bg-reka-blue-dark text-white font-bold px-6 py-3.5 rounded-md transition-colors whitespace-nowrap text-sm">
@@ -890,7 +890,7 @@
             <div>
                 <span class="text-xs text-gray-500">&copy; 2026 REKA. All rights reserved. Inspiration by IKEA style.</span>
             </div>
-            
+
             <!-- Payment Badges -->
             <div class="flex flex-wrap gap-2.5">
                 <span class="bg-gray-800 text-gray-400 text-[10px] font-bold px-3 py-1.5 rounded border border-gray-700 select-none uppercase tracking-wider">Visa</span>

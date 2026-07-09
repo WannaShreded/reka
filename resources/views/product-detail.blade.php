@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="REKA - VIMLE 3-Seat Sofa. Comfortable, functional, and modular Scandinavian sofa.">
-    
+
     <title>REKA - VIMLE 3-Seat Sofa</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -89,13 +89,13 @@
     <!-- ─── PRODUCT PRESENTATION (Main Detail) ─── -->
     <main class="page-shell-inner max-w-7xl mx-auto px-6 py-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            
+
             <!-- LEFT COLUMN: Image & Gallery (7 cols) -->
             <div class="lg:col-span-7 flex flex-col gap-6">
                 <!-- Large Product Image -->
                 <div class="panel-card overflow-hidden aspect-square flex items-center justify-center p-8 group relative">
                     <img id="main-product-image" src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
-                    
+
                     <!-- Zoom Overlay Indicator -->
                     <span class="absolute bottom-4 right-4 bg-white/80 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm border border-reka-border text-reka-text pointer-events-none flex items-center gap-1.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>
@@ -230,7 +230,7 @@
         <!-- ─── DETAIL SPECIFICATIONS ACCORDION (Below Column) ─── -->
         <section class="mt-20 border-t border-reka-border pt-16">
             <h2 class="text-2xl font-bold tracking-tight mb-8">Product Specifications</h2>
-            
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                 <!-- Left: Text Summary (4 cols) -->
                 <div class="lg:col-span-4">
@@ -502,7 +502,7 @@
             <div>
                 <span class="text-xs text-gray-500">&copy; 2026 REKA. All rights reserved. Inspiration by IKEA style.</span>
             </div>
-            
+
             <!-- Payment Badges -->
             <div class="flex flex-wrap gap-2.5">
                 <span class="bg-gray-800 text-gray-400 text-[10px] font-bold px-3 py-1.5 rounded border border-gray-700 select-none uppercase tracking-wider">Visa</span>
@@ -521,6 +521,7 @@
     </footer>
 
     <!-- Interactive Scripts for Details Page -->
+    <!-- document.getElementById('quantity-input').value = current; -->
     <script>
         // Gallery switcher
         function changeImage(src, btn) {
@@ -538,10 +539,14 @@
         // Qty counter
         function updateQty(delta) {
             const label = document.getElementById('product-qty');
+            const quantityInput = document.getElementById('quantity-input');
             let current = parseInt(label.textContent, 10) || 1;
             current += delta;
             if (current < 1) current = 1;
             label.textContent = current;
+            if (quantityInput) {
+                document.getElementById('quantity-input').value = current;
+            }
         }
     </script>
 </body>

@@ -113,8 +113,8 @@
                     </section>
 
                     <div class="flex flex-wrap gap-3">
-                        <button class="rounded-full bg-reka-blue px-5 py-3 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">Save Changes</button>
-                        <button class="rounded-full border border-reka-border px-5 py-3 text-sm font-semibold text-reka-text-secondary transition hover:bg-reka-surface">Cancel</button>
+                        <a href="{{ route('dashboard') }}" class="rounded-full bg-reka-blue px-5 py-3 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">Save Changes</a>
+                        <a href="{{ route('dashboard') }}" class="rounded-full border border-reka-border px-5 py-3 text-sm font-semibold text-reka-text-secondary transition hover:bg-reka-surface">Cancel</a>
                     </div>
                 </div>
             </div>
