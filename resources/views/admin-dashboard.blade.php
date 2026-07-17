@@ -154,21 +154,21 @@
                         <div class="mt-5 space-y-3">
                             <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
                                 <div>
-                                    <p class="font-semibold text-slate-900">VIMLE Sofa</p>
+                                    <p class="font-semibold text-slate-900">Lucia Blouse</p>
                                     <p class="text-sm text-slate-500">184 sold</p>
                                 </div>
                                 <span class="font-semibold text-slate-900">Rp 8.5M</span>
                             </div>
                             <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
                                 <div>
-                                    <p class="font-semibold text-slate-900">BJÖRKUDDEN Table</p>
+                                    <p class="font-semibold text-slate-900">Raven Jacket</p>
                                     <p class="text-sm text-slate-500">96 sold</p>
                                 </div>
                                 <span class="font-semibold text-slate-900">Rp 9.0M</span>
                             </div>
                             <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
                                 <div>
-                                    <p class="font-semibold text-slate-900">Lounge Chair</p>
+                                    <p class="font-semibold text-slate-900">Everyday Tee</p>
                                     <p class="text-sm text-slate-500">72 sold</p>
                                 </div>
                                 <span class="font-semibold text-slate-900">Rp 2.4M</span>

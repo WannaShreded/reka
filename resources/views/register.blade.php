@@ -19,7 +19,7 @@
                     <div class="mb-8">
                         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-reka-blue">Create account</p>
                         <h1 class="mt-2 text-3xl font-semibold tracking-tight">Join REKA</h1>
-                        <p class="mt-2 text-sm text-reka-text-muted">Create your account for a smoother furniture shopping experience.</p>
+                        <p class="mt-2 text-sm text-reka-text-muted">Create your account for a smoother fashion shopping experience.</p>
                     </div>
 
                     <form method="POST" action="{{ route('register') }}" class="space-y-4">
@@ -69,7 +69,7 @@
             <div class="flex flex-1 items-center justify-center px-6 pb-10 pt-2 sm:px-8 lg:px-12 lg:py-12">
                 <div class="w-full max-w-lg rounded-[32px] border border-reka-border bg-white/70 p-6 shadow-[0_20px_60px_rgba(17,17,17,0.06)]">
                     <div class="rounded-[28px] bg-reka-surface p-6">
-                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80" alt="Modern furniture interior" class="h-[420px] w-full rounded-[24px] object-cover">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80" alt="Model wearing curated apparel" class="h-[420px] w-full rounded-[24px] object-cover">
                     </div>
                 </div>
             </div>

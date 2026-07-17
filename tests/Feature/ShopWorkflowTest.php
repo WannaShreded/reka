@@ -12,9 +12,9 @@ class ShopWorkflowTest extends TestCase
     public function test_it_requires_a_size_before_adding_to_cart(): void
     {
         $response = $this->post('/cart/add', [
-            'product_slug' => 'vimle',
+            'product_slug' => 'linen-blouse',
             'quantity' => 1,
-            'color' => 'beige',
+            'color' => 'Sand',
         ]);
 
         $response->assertRedirect();
@@ -74,10 +74,10 @@ class ShopWorkflowTest extends TestCase
 
     public function test_search_page_shows_matching_products(): void
     {
-        $response = $this->get('/search?query=vimle');
+        $response = $this->get('/search?query=linen');
 
         $response->assertOk();
-        $response->assertSee('VIMLE Sofa');
+        $response->assertSee('Linen Blouse');
     }
 
     public function test_settings_page_requires_authentication(): void
@@ -89,16 +89,16 @@ class ShopWorkflowTest extends TestCase
 
     public function test_search_results_are_filtered_by_query(): void
     {
-        $response = $this->get('/search?query=vimle');
+        $response = $this->get('/search?query=linen');
 
         $response->assertOk();
-        $response->assertSee('VIMLE Sofa');
-        $response->assertDontSee('BJÖRKUDDEN Table');
+        $response->assertSee('Linen Blouse');
+        $response->assertDontSee('Denim Jeans');
     }
 
     public function test_product_detail_quantity_updates_the_hidden_field(): void
     {
-        $response = $this->get('/product/vimle');
+        $response = $this->get('/product/linen-blouse');
 
         $response->assertOk();
         $response->assertSee('id="quantity-input"', false);
@@ -121,21 +121,21 @@ class ShopWorkflowTest extends TestCase
         );
 
         $this->get('/category')->assertOk();
-        $this->get('/search?query=vimle')->assertOk()->assertSee('VIMLE Sofa');
-        $this->get('/product/vimle')->assertOk();
+        $this->get('/search?query=linen')->assertOk()->assertSee('Linen Blouse');
+        $this->get('/product/linen-blouse')->assertOk();
 
         $this->post('/cart/add', [
-            'product_slug' => 'vimle',
+            'product_slug' => 'linen-blouse',
             'quantity' => 2,
             'size' => 'M',
-            'color' => 'Beige',
+            'color' => 'Sand',
         ])->assertRedirect();
 
         $cartResponse = $this->get('/cart');
         $cartResponse->assertOk();
-        $cartResponse->assertSee('VIMLE Sofa');
+        $cartResponse->assertSee('Linen Blouse');
 
-        $this->patch('/cart/vimle:M:Beige', ['quantity' => 3])->assertRedirect();
+        $this->patch('/cart/linen-blouse:M:Sand', ['quantity' => 3])->assertRedirect();
 
         $checkoutResponse = $this->get('/checkout');
         $checkoutResponse->assertOk();

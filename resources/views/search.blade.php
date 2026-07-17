@@ -14,7 +14,7 @@
                     <div class="flex-1">
                         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-reka-blue">Find your fit</p>
                         <h1 class="mt-2 text-3xl font-semibold tracking-tight">Search Results</h1>
-                        <p class="mt-2 text-sm text-reka-text-muted">Showing 24 results for “living room”</p>
+                        <p class="mt-2 text-sm text-reka-text-muted">Showing {{ count($products) }} results for “{{ $query ?? '' }}”</p>
                     </div>
                     <form action="{{ route('search') }}" method="GET" class="flex w-full max-w-xl items-center rounded-full border border-reka-border bg-reka-surface px-4 py-3 shadow-sm">
                         <svg class="mr-3 h-5 w-5 text-reka-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -30,9 +30,9 @@
                         <div>
                             <p class="mb-2 font-semibold text-reka-text">Category</p>
                             <div class="space-y-2 text-reka-text-secondary">
-                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Sofas</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Tables</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Storage</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Shirts</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Jackets</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Accessories</label>
                             </div>
                         </div>
                         <div>
@@ -46,9 +46,9 @@
                         <div>
                             <p class="mb-2 font-semibold text-reka-text">Material</p>
                             <div class="space-y-2 text-reka-text-secondary">
-                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Wood</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Fabric</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Leather</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Cotton</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Polyester</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" class="h-4 w-4 rounded border-reka-border text-reka-blue" /> Wool</label>
                             </div>
                         </div>
                     </div>

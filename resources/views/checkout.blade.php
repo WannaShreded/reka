@@ -33,11 +33,7 @@
                         <div class="flex h-9 w-9 items-center justify-center rounded-full bg-reka-blue text-sm font-semibold text-white">1</div>
                         <div>
                             <h2 class="text-xl font-semibold">Shipping Information</h2>
-                            <p class="text-sm text-reka-text-muted">Where should we deliver your furniture?</p>
-                        </div>
-                    </div>
-
-                    <div class="grid gap-4 md:grid-cols-2">
+                                <p class="text-sm text-reka-text-muted">Where should we deliver your order?</p>
                         <div>
                             <label class="mb-2 block text-sm font-medium text-reka-text-secondary">Full Name</label>
                             <input name="customer_name" type="text" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="Ayu Pratama" required>

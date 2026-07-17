@@ -12,7 +12,7 @@
             <div class="rounded-[32px] border border-reka-border bg-white p-8 shadow-[0_16px_40px_rgba(17,17,17,0.06)]">
                 <p class="text-sm font-semibold uppercase tracking-[0.25em] text-reka-blue">Support center</p>
                 <h1 class="mt-3 text-3xl font-semibold tracking-tight">We’re here to help</h1>
-                <p class="mt-3 max-w-2xl text-sm text-reka-text-muted">Reach our team for order help, delivery updates, or furniture care advice.</p>
+                <p class="mt-3 max-w-2xl text-sm text-reka-text-muted">Reach our team for order help, delivery updates, or apparel care advice.</p>
 
                 <div class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                     <div class="rounded-[24px] border border-reka-border bg-reka-surface p-5">
@@ -21,7 +21,7 @@
                     </div>
                     <div class="rounded-[24px] border border-reka-border bg-reka-surface p-5">
                         <h2 class="text-lg font-semibold">Product care</h2>
-                        <p class="mt-2 text-sm text-reka-text-muted">Get care instructions, warranties, and assembly tips for your furniture.</p>
+                        <p class="mt-2 text-sm text-reka-text-muted">Get care instructions, warranties, and styling tips for your apparel.</p>
                     </div>
                     <div class="rounded-[24px] border border-reka-border bg-reka-surface p-5">
                         <h2 class="text-lg font-semibold">Contact us</h2>

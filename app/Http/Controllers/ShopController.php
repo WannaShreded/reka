@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,57 +12,43 @@ use Illuminate\Support\Facades\Session;
 
 class ShopController extends Controller
 {
-    private array $products = [
-        'vimle' => [
-            'slug' => 'vimle',
-            'name' => 'VIMLE Sofa',
-            'price' => 8499000,
-            'image' => 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80',
-            'images' => [
-                'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80',
-                'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1000&q=80',
-                'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?auto=format&fit=crop&w=1000&q=80',
-                'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80',
-            ],
-            'sizes' => ['S', 'M', 'L'],
-            'colors' => ['Beige', 'Grey', 'Blue'],
-            'stock' => 5,
-            'rating' => '4.8',
-            'description' => 'A modular, comfort-first sofa designed to fit contemporary homes.',
-        ],
-        'bjorlkudden' => [
-            'slug' => 'bjorlkudden',
-            'name' => 'BJÖRKUDDEN Table',
-            'price' => 8999000,
-            'image' => 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
-            'images' => [
-                'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
-            ],
-            'sizes' => ['S', 'M', 'L', 'XL'],
-            'colors' => ['Oak', 'Walnut'],
-            'stock' => 3,
-            'rating' => '4.6',
-            'description' => 'Solid wood dining table with a clean, sculptural silhouette.',
-        ],
-    ];
-
     public function productDetail(string $slug)
     {
-        abort_unless(isset($this->products[$slug]), 404);
+        $productModel = Product::where('slug', $slug)->first();
+        abort_unless($productModel, 404);
 
-        $product = $this->products[$slug];
-        $product['slug'] = $slug;
+        $product = $productModel->toArray();
 
         return view('product-detail', [
             'product' => $product,
-            'relatedProducts' => array_slice($this->products, 0, 2, true),
+            'relatedProducts' => Product::where('slug', '!=', $slug)
+                ->limit(2)
+                ->get()
+                ->keyBy('slug')
+                ->toArray(),
         ]);
     }
 
-    public function category()
+    public function category(Request $request)
     {
-        return view('category', ['products' => $this->products]);
+        $selectedCategory = $request->query('category');
+
+        $productsQuery = Product::orderBy('name');
+        if ($selectedCategory) {
+            $productsQuery->where('category', $selectedCategory);
+        }
+
+        $products = $productsQuery->paginate(12)->withQueryString();
+        $categories = Product::select('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+
+        return view('category', [
+            'products' => $products,
+            'categories' => $categories,
+            'selectedCategory' => $selectedCategory,
+        ]);
     }
 
     public function cart()
@@ -90,12 +77,14 @@ class ShopController extends Controller
             return redirect()->route('admin-dashboard');
         }
 
-        $product = $this->products[$data['product_slug']] ?? null;
-        if (!$product) {
+        $productModel = Product::where('slug', $data['product_slug'])->first();
+        if (!$productModel) {
             return back()->withErrors(['product' => 'Product not found.']);
         }
 
-        if (!in_array($data['size'], $product['sizes'], true)) {
+        $product = $productModel->toArray();
+
+        if (!in_array($data['size'], $product['sizes'] ?? [], true)) {
             return back()->withErrors(['size' => 'The selected size is unavailable.']);
         }
 
@@ -251,7 +240,7 @@ class ShopController extends Controller
     public function search(Request $request)
     {
         $query = trim((string) $request->input('query', ''));
-        $products = $this->products;
+        $products = Product::orderBy('name')->get()->keyBy('slug')->toArray();
 
         if ($query !== '') {
             $needle = mb_strtolower($query);
@@ -262,10 +251,11 @@ class ShopController extends Controller
                     $product['slug'] ?? '',
                     implode(' ', $product['colors'] ?? []),
                     implode(' ', $product['sizes'] ?? []),
+                    $product['category'] ?? '',
                 ]));
 
                 return str_contains($haystack, $needle);
-            }, ARRAY_FILTER_USE_BOTH);
+            });
         }
 
         return view('search', [
@@ -279,11 +269,18 @@ class ShopController extends Controller
         $wishlistSlugs = Session::get('wishlist', []);
         $wishlist = [];
 
-        foreach (array_keys($wishlistSlugs) as $slug) {
-            if (isset($this->products[$slug])) {
-                $product = $this->products[$slug];
-                $product['slug'] = $slug;
-                $wishlist[] = $product;
+        if (!empty($wishlistSlugs)) {
+            $products = Product::whereIn('slug', array_keys($wishlistSlugs))
+                ->get()
+                ->keyBy('slug')
+                ->toArray();
+
+            foreach (array_keys($wishlistSlugs) as $slug) {
+                if (isset($products[$slug])) {
+                    $product = $products[$slug];
+                    $product['slug'] = $slug;
+                    $wishlist[] = $product;
+                }
             }
         }
 
