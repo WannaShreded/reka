@@ -49,7 +49,7 @@
                         </thead>
                         <tbody class="divide-y divide-reka-border">
                             @forelse($orders as $order)
-                                <tr class="hover:bg-reka-surface/70">
+                                <tr class="hover:bg-[color:rgba(247,245,239,0.7)]">
                                     <td class="px-5 py-4 font-semibold text-reka-text">{{ $order->order_number }}</td>
                                     <td class="px-5 py-4 text-reka-text-secondary">{{ $order->created_at->format('d M Y') }}</td>
                                     <td class="px-5 py-4"><span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">{{ ucfirst($order->status) }}</span></td>

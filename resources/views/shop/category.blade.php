@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="page-shell bg-[#f7f7f2] text-reka-text antialiased">
-    <header class="sticky top-0 z-40 border-b border-reka-border/80 bg-white/90 backdrop-blur">
+    <header class="premium-nav sticky top-0 z-40">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
             <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-[0.25em] text-reka-blue uppercase">
                 <span class="flex h-8 w-8 items-center justify-center rounded-md bg-reka-yellow text-sm font-black text-reka-text">R</span>
@@ -51,7 +51,7 @@
 
                 <div class="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
                     @foreach($products as $product)
-                        <article class="section-card group flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]" data-product-card data-sizes="{{ implode(',', $product->sizes) }}">
+                        <article class="product-card group flex h-full flex-col overflow-hidden" data-product-card data-sizes="{{ implode(',', $product->sizes) }}">
                             <div class="relative">
                                 <a href="{{ route('product-detail', ['slug' => $product->slug]) }}" class="block">
                                     <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">

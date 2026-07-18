@@ -22,7 +22,7 @@
     @php($featuredProducts = $featuredProducts ?? collect())
 
     <!-- ─── STICKY NAVIGATION BAR ─── -->
-    <header id="navbar" class="sticky top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-reka-border">
+    <header id="navbar" class="premium-nav sticky top-0 w-full z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between sm:px-6 lg:px-8">
             <!-- Left: Logo -->
             <a href="/"
@@ -35,13 +35,13 @@
             <!-- Center: Navigation Links -->
             <nav class="hidden lg:flex items-center gap-8">
                 <a href="/category"
-                    class="text-sm font-semibold text-reka-text hover:text-reka-blue transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-reka-blue hover:after:w-full after:transition-all">Products</a>
+                    class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">Products</a>
                 <a href="#featured"
-                    class="text-sm font-semibold text-reka-text hover:text-reka-blue transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-reka-blue hover:after:w-full after:transition-all">Featured</a>
+                    class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">Featured</a>
                 <a href="#promotions"
-                    class="text-sm font-semibold text-reka-text hover:text-reka-blue transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-reka-blue hover:after:w-full after:transition-all">Offers</a>
+                    class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">Offers</a>
                 <a href="#reviews"
-                    class="text-sm font-semibold text-reka-text hover:text-reka-blue transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-reka-blue hover:after:w-full after:transition-all">Review</a>
+                    class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">Review</a>
             </nav>
 
             <!-- Right: Search & Actions -->
@@ -49,7 +49,7 @@
                 <!-- Search Bar (Desktop) -->
                 <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center relative w-72">
                     <input type="text" name="query" placeholder="What are you looking for?"
-                        class="w-full pl-10 pr-4 py-2 bg-reka-surface border border-transparent focus:border-reka-blue rounded-full text-sm focus:outline-none transition-all placeholder:text-reka-text-muted">
+                        class="w-full pl-10 pr-4 py-2.5 bg-[color:rgba(247,245,239,0.7)] border border-[color:rgba(231,226,216,0.8)] focus:border-reka-blue rounded-full text-sm focus:outline-none transition-all placeholder:text-reka-text-muted shadow-sm">
                     <svg class="w-4 h-4 text-reka-text-secondary absolute left-3.5" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -133,7 +133,7 @@
     </header>
 
     <!-- ─── HERO BANNER ─── -->
-    <section class="relative w-full h-[560px] overflow-hidden bg-reka-text flex items-center sm:h-[640px] lg:h-[720px]">
+    <section class="relative flex h-[560px] w-full items-center overflow-hidden bg-reka-text sm:h-[640px] lg:h-[760px]">
         <!-- Background Image -->
         <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Fashion editorial scene with layered outfits" class="absolute inset-0 w-full h-full object-cover">
@@ -144,19 +144,19 @@
         <div class="relative z-10 max-w-7xl mx-auto px-4 w-full sm:px-6 lg:px-8">
             <div data-animate class="max-w-xl text-white">
                 <span
-                    class="inline-flex items-center gap-2 text-reka-yellow font-bold text-sm uppercase tracking-widest">
-                    <span class="w-8 h-[2px] bg-reka-yellow"></span>
+                    class="glass-pill inline-flex items-center gap-2">
+                    <span class="h-[2px] w-8 bg-reka-yellow"></span>
                     New Collection 2026
                 </span>
-                <h1 class="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] mt-4">
+                <h1 class="mt-4 text-5xl font-semibold leading-[0.95] tracking-[-0.03em] text-white lg:text-7xl">
                     Make space<br>for style
                 </h1>
-                <p class="text-lg text-white/80 mt-6 leading-relaxed max-w-md">
+                <p class="mt-6 max-w-md text-lg leading-8 text-white/80">
                     Modern apparel designed for everyday life. Effortless, sustainable, and built to move with you.
                 </p>
-                <div class="flex flex-wrap gap-4 mt-10">
+                <div class="mt-10 flex flex-wrap gap-4">
                     <a href="/category"
-                        class="inline-flex items-center gap-2 bg-reka-yellow text-reka-text font-bold px-8 py-4 rounded-lg hover:bg-reka-yellow-dark transition-all duration-300 shadow-md hover:shadow-lg">
+                        class="btn-primary inline-flex items-center gap-2 px-8 py-4 text-base">
                         Shop Now
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -164,7 +164,7 @@
                         </svg>
                     </a>
                     <a href="#featured"
-                        class="inline-flex items-center gap-2 border-2 border-white/60 text-white font-semibold px-8 py-4 rounded-lg hover:bg-white/10 hover:border-white transition-all duration-300">
+                        class="inline-flex items-center gap-2 rounded-full border border-white/40 px-8 py-4 font-semibold text-white transition-all duration-300 hover:bg-white/10 hover:border-white/70">
                         Explore Design
                     </a>
                 </div>
@@ -173,18 +173,18 @@
     </section>
 
     <!-- ─── POPULAR CATEGORIES ─── -->
-    <section id="categories" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-24">
-        <div data-animate class="text-center mb-16">
-            <div class="w-12 h-1 bg-reka-yellow mx-auto mb-4"></div>
-            <h2 class="text-3xl lg:text-4xl font-bold tracking-tight">Shop by Category</h2>
-            <p class="text-reka-text-muted mt-3">Find effortless pieces for every part of your wardrobe</p>
+    <section id="categories" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+        <div data-animate class="mb-16 text-center">
+            <div class="mx-auto mb-4 h-1 w-12 bg-reka-yellow"></div>
+            <h2 class="text-3xl font-semibold tracking-[-0.02em] text-reka-text lg:text-4xl">Shop by Category</h2>
+            <p class="mt-3 text-reka-text-muted">Find effortless pieces for every part of your wardrobe</p>
         </div>
 
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-6">
             <!-- Category 1 -->
             <a href="{{ route('category', ['category' => 'Celana']) }}">
                 <div data-animate
-                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
+                    class="group relative h-80 overflow-hidden rounded-[28px] border border-white/20 shadow-[0_16px_40px_rgba(17,17,17,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(17,17,17,0.12)]">
                     <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=397&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Women clothing collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -201,7 +201,7 @@
             <!-- Category 2 -->
             <a href="{{ route('category', ['category' => 'Hoodie']) }}">
                 <div data-animate
-                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-100 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
+                    class="group relative h-80 overflow-hidden rounded-[28px] border border-white/20 shadow-[0_16px_40px_rgba(17,17,17,0.08)] transition-all duration-300 delay-100 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(17,17,17,0.12)]">
                     <img src="https://plus.unsplash.com/premium_photo-1673356302125-c77491af8735?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Outerwear collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -216,7 +216,7 @@
             <!-- Category 3 -->
             <a href="{{ route('category', ['category' => 'Jaket']) }}">
                 <div data-animate
-                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-200 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
+                    class="group relative h-80 overflow-hidden rounded-[28px] border border-white/20 shadow-[0_16px_40px_rgba(17,17,17,0.08)] transition-all duration-300 delay-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(17,17,17,0.12)]">
                     <img src="https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?q=80&w=369&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Basics clothing collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -231,7 +231,7 @@
             <!-- Category 4 -->
             <a href="{{ route('category', ['category' => 'Kaos']) }}">
                 <div data-animate
-                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
+                    class="group relative h-80 overflow-hidden rounded-[28px] border border-white/20 shadow-[0_16px_40px_rgba(17,17,17,0.08)] transition-all duration-300 delay-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(17,17,17,0.12)]">
                     <img src="https://plus.unsplash.com/premium_photo-1718913931807-4da5b5dd27fa?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Curated accessories collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -246,7 +246,7 @@
             <!-- Category 5 -->
             <a href="{{ route('category', ['category' => 'Kemeja']) }}">
                 <div data-animate
-                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-400 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
+                    class="group relative h-80 overflow-hidden rounded-[28px] border border-white/20 shadow-[0_16px_40px_rgba(17,17,17,0.08)] transition-all duration-300 delay-400 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(17,17,17,0.12)]">
                     <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=388&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Lifestyle apparel"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -261,7 +261,7 @@
     </section>
 
     <!-- ─── FEATURED PRODUCTS ─── -->
-    <section id="featured" class="py-20 bg-reka-surface border-y border-reka-border lg:py-24">
+    <section id="featured" class="border-y border-[color:rgba(231,226,216,0.8)] bg-[color:rgba(247,245,239,0.8)] py-20 lg:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div data-animate class="text-center mb-16">
                 <div class="w-12 h-1 bg-reka-yellow mx-auto mb-4"></div>
@@ -272,8 +272,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 @foreach($featuredProducts as $product)
                     <div data-animate
-                        class="bg-white rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(17,17,17,0.05)] hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)] hover:-translate-y-1.5 transition-all duration-300 group flex flex-col h-full relative border border-reka-border/80">
-                        <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}" class="relative aspect-square overflow-hidden bg-gray-50 block">
+                        class="product-card group relative flex h-full flex-col">
+                        <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}" class="relative block aspect-square overflow-hidden bg-[#f7f4ed]">
                             <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         </a>
@@ -304,8 +304,9 @@
                                 @endif
                             </div>
 
-                            <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
-                                <span class="text-xl font-bold text-reka-text">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
+                            <div class="mt-6 flex items-center justify-between border-t border-reka-border pt-3">
+                                <span class="text-lg font-semibold text-reka-text">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
+                                <span class="text-sm font-medium text-reka-blue">View</span>
                             </div>
                         </div>
                     </div>
@@ -387,7 +388,7 @@
                 <!-- Review 1 -->
                 <div data-animate
                     class="bg-white rounded-2xl p-8 border border-reka-border hover:shadow-lg transition-shadow duration-300">
-                    <span class="text-6xl text-reka-blue/15 font-serif leading-none select-none">“</span>
+                    <span class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
                     <p class="text-reka-text-secondary italic leading-relaxed mt-2">
                         This knit collection completely refreshed my weekend wardrobe. The fabric feels premium, it's
                         soft enough for all-day wear, and the fit is perfect for every relaxed look.
@@ -427,7 +428,7 @@
                 <!-- Review 2 -->
                 <div data-animate
                     class="bg-white rounded-2xl p-8 border border-reka-border hover:shadow-lg transition-shadow duration-300 delay-100">
-                    <span class="text-6xl text-reka-blue/15 font-serif leading-none select-none">“</span>
+                    <span class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
                     <p class="text-reka-text-secondary italic leading-relaxed mt-2">
                         Outstanding service. The classic sweater is incredibly durable and keeps its shape after every
                         wash. It matches my minimal aesthetic perfectly.
@@ -467,7 +468,7 @@
                 <!-- Review 3 -->
                 <div data-animate
                     class="bg-white rounded-2xl p-8 border border-reka-border hover:shadow-lg transition-shadow duration-300 delay-200">
-                    <span class="text-6xl text-reka-blue/15 font-serif leading-none select-none">“</span>
+                    <span class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
                     <p class="text-reka-text-secondary italic leading-relaxed mt-2">
                         The collection helped me refresh my entire wardrobe. Quality and fit are exceptional, plus the
                         styling recommendations made everything effortless.

@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
-    <header class="border-b border-reka-border bg-white/90 backdrop-blur">
+    <header class="premium-nav border-b border-[color:rgba(231,226,216,0.7)]">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
             <a href="/" class="flex items-center gap-2 text-lg font-semibold tracking-[0.2em] text-reka-blue uppercase">
                 <span class="flex h-8 w-8 items-center justify-center rounded-md bg-reka-yellow text-sm font-black text-reka-text">R</span>
@@ -31,7 +31,7 @@
         <div class="grid gap-8 lg:grid-cols-[1.6fr_0.8fr]">
             <section class="space-y-4">
                 @forelse($items as $key => $item)
-                    <article class="flex flex-col gap-5 rounded-[28px] border border-reka-border bg-white p-5 shadow-[0_10px_30px_rgba(17,17,17,0.05)] sm:flex-row sm:items-center transition hover:-translate-y-0.5">
+                    <article class="product-card flex flex-col gap-5 p-5 sm:flex-row sm:items-center">
                         <img src="{{ $item['image_url'] ?? '' }}" alt="{{ $item['name'] }}" class="h-32 w-full rounded-2xl object-cover sm:h-28 sm:w-28">
                         <div class="flex-1">
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

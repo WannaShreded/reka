@@ -41,8 +41,8 @@
     </div>
 
     <!-- ─── NAVIGATION BAR ─── -->
-    <header id="navbar" class="w-full bg-white border-b border-reka-border sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <header id="navbar" class="premium-nav sticky top-0 z-50 w-full">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <!-- Left: Logo -->
             <a href="/"
                 class="text-2xl font-bold text-reka-blue tracking-widest uppercase flex items-center gap-1.5">
@@ -69,7 +69,7 @@
             <div class="flex items-center gap-5">
                 <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center relative w-72">
                     <input type="text" name="query" placeholder="What are you looking for?"
-                        class="w-full pl-10 pr-4 py-2 bg-reka-surface border border-transparent focus:border-reka-blue rounded-full text-sm focus:outline-none transition-all placeholder:text-reka-text-muted">
+                        class="w-full rounded-full border border-[color:rgba(231,226,216,0.8)] bg-[color:rgba(247,245,239,0.7)] py-2.5 pl-10 pr-4 text-sm shadow-sm transition-all placeholder:text-reka-text-muted focus:border-reka-blue focus:outline-none">
                     <svg class="w-4 h-4 text-reka-text-secondary absolute left-3.5" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -109,7 +109,7 @@
     </header>
 
     <!-- ─── BREADCRUMBS ─── -->
-    <div class="border-b border-reka-border bg-reka-surface/80 py-4">
+    <div class="border-b border-reka-border bg-[color:rgba(247,245,239,0.8)] py-4">
         <div class="mx-auto flex max-w-7xl items-center gap-2.5 px-4 text-sm text-reka-text-secondary sm:px-6 lg:px-8">
             <a href="/" class="hover:text-reka-blue transition-colors">Home</a>
             <svg class="w-3.5 h-3.5 text-reka-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +131,7 @@
             <div class="lg:col-span-7 flex flex-col gap-6">
                 <!-- Large Product Image -->
                 <div
-                    class="surface-card relative flex aspect-square items-center justify-center overflow-hidden p-8 group">
+                    class="surface-card group relative flex aspect-square items-center justify-center overflow-hidden p-8">
                     <img id="main-product-image" src="{{ $product['image_url'] }}"
                         alt="{{ $product['name'] }}"
                         class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
@@ -151,7 +151,7 @@
                 <div class="grid grid-cols-4 gap-4">
                     @foreach ($product['image_urls'] as $index => $imageUrl)
                         <button onclick="changeImage('{{ $imageUrl }}', this)"
-                            class="thumbnail-btn bg-reka-surface rounded-xl overflow-hidden aspect-square border-2 {{ $index === 0 ? 'border-reka-blue' : 'border-transparent hover:border-reka-border' }} p-2 focus:outline-none transition-all">
+                            class="thumbnail-btn aspect-square overflow-hidden rounded-2xl border-2 bg-reka-surface p-2 transition-all focus:outline-none {{ $index === 0 ? 'border-reka-blue shadow-sm' : 'border-transparent hover:border-reka-border' }}">
 
                             <img src="{{ $imageUrl }}" alt="{{ $product['name'] }} thumbnail"
                                 class="w-full h-full object-cover">
@@ -162,33 +162,29 @@
 
             <!-- RIGHT COLUMN: Purchase Details & Form (5 cols) -->
             <div class="lg:col-span-5 flex flex-col">
-                <!-- Eyebrow & Stock Status -->
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-semibold uppercase tracking-[0.25em] text-reka-blue">Signature Apparel</span>
                 </div>
 
-                <!-- Product Name -->
-                <h1 class="mt-4 text-3xl font-semibold tracking-tight text-reka-text sm:text-4xl">{{ $product['name'] }}</h1>
+                <h1 class="mt-4 text-3xl font-semibold tracking-[-0.02em] text-reka-text sm:text-4xl">{{ $product['name'] }}</h1>
                 <p class="mt-2 text-lg leading-8 text-reka-text-secondary">{{ $product['description'] }}</p>
 
-                <!-- Price -->
                 <div class="mt-6 border-b border-reka-border pb-6">
                     <span class="text-3xl font-semibold text-reka-text">Rp
                         {{ number_format($product['price'], 0, ',', '.') }}</span>
-                    <p class="text-xs text-reka-text-muted mt-1">Includes local tax. Standard tailoring & delivery
-                        handled at checkout.</p>
+                    <p class="mt-1 text-xs text-reka-text-muted">Includes local tax. Standard tailoring & delivery handled at checkout.</p>
                     <div class="mt-4 flex flex-wrap items-center gap-3">
                         @if(($product['is_available'] ?? false))
                             <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Tersedia</span>
                         @else
                             <span class="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-sm font-semibold text-rose-700">Barang Habis</span>
                         @endif
+                        <span class="inline-flex items-center rounded-full border border-reka-border bg-reka-surface px-3 py-1 text-sm font-semibold text-reka-text-secondary">Single unit purchase</span>
                     </div>
                 </div>
 
-                <!-- Description -->
                 <div class="mt-6">
-                    <p class="text-sm text-reka-text-secondary leading-relaxed">
+                    <p class="text-sm leading-relaxed text-reka-text-secondary">
                         {{ $product['description'] }}
                     </p>
                 </div>
@@ -200,8 +196,7 @@
 
                     <div class="flex items-center gap-3">
                         <label class="text-sm font-semibold text-reka-text-secondary">Size</label>
-                        <span
-                            class="rounded-full border border-reka-border bg-gray-100 px-4 py-2 text-sm text-reka-text-primary">
+                        <span class="rounded-full border border-reka-border bg-reka-surface px-4 py-2 text-sm font-medium text-reka-text-secondary">
                             {{ $product['sizes'][0] }}
                         </span>
                     </div>
@@ -212,8 +207,8 @@
                         <input type="hidden" name="quantity" id="quantity-input" value="1">
                         @if(($product['is_available'] ?? false))
                             <button type="submit"
-                                class="add-to-cart-btn flex-grow inline-flex items-center justify-center gap-2 btn-primary px-6 py-4 rounded-full shadow-sm hover:shadow-md focus:outline-none">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="add-to-cart-btn flex-grow inline-flex items-center justify-center gap-2 btn-primary px-6 py-4 rounded-full focus:outline-none">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                 </svg>
@@ -226,30 +221,32 @@
                         @endif
                     </div>
                 </form>
-                <form action="{{ route('wishlist.add') }}" method="POST" class="mt-3">
-                    @csrf
-                    <input type="hidden" name="product_slug" value="{{ $product['slug'] }}">
-                    <button type="submit"
-                        class="wishlist-btn border border-reka-border w-14 h-14 rounded-full flex items-center justify-center bg-white hover:bg-reka-surface transition-all shrink-0 shadow-sm hover:scale-105 active:scale-95"
-                        aria-label="Add to Wishlist">
-                        <svg class="w-6 h-6 text-gray-500 pointer-events-none" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-                </form>
+                <div class="mt-3 flex items-center gap-3">
+                    <form action="{{ route('wishlist.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_slug" value="{{ $product['slug'] }}">
+                        <button type="submit"
+                            class="wishlist-btn flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-reka-border bg-white shadow-sm transition-all hover:scale-105 hover:bg-reka-surface active:scale-95"
+                            aria-label="Add to Wishlist">
+                            <svg class="pointer-events-none h-6 w-6 text-gray-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+                    </form>
 
-                @if(($product['is_available'] ?? false))
-                    <a href="{{ route('checkout') }}"
-                        class="mt-3.5 block w-full bg-reka-yellow text-reka-text font-bold px-6 py-4 rounded-full hover:bg-reka-yellow-dark transition-all shadow-sm hover:shadow-md focus:outline-none text-center">
-                        Buy It Now
-                    </a>
-                @else
-                    <span class="mt-3.5 block w-full cursor-not-allowed rounded-full border border-rose-200 bg-rose-50 px-6 py-4 text-center text-sm font-semibold text-rose-700">
-                        Barang Habis
-                    </span>
-                @endif
+                    @if(($product['is_available'] ?? false))
+                        <a href="{{ route('checkout') }}"
+                            class="block flex-1 rounded-full bg-reka-yellow px-6 py-4 text-center text-sm font-semibold text-reka-text transition-all hover:bg-reka-yellow-dark focus:outline-none">
+                            Buy It Now
+                        </a>
+                    @else
+                        <span class="block flex-1 cursor-not-allowed rounded-full border border-rose-200 bg-rose-50 px-6 py-4 text-center text-sm font-semibold text-rose-700">
+                            Barang Habis
+                        </span>
+                    @endif
+                </div>
 
                 <!-- Small Trust indicators -->
                 <div

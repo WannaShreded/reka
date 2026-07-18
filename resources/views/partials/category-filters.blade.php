@@ -15,19 +15,19 @@
                 </summary>
                 <div class="border-t border-gray-100 px-3 pb-3 pt-2">
                     <div class="space-y-1.5 text-sm text-reka-text-secondary">
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue" checked>
                             <span>Men</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue" checked>
                             <span>Women</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue">
                             <span>Kids</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue">
                             <span>Accessories</span>
                         </label>
@@ -44,19 +44,19 @@
                 </summary>
                 <div class="border-t border-gray-100 px-3 pb-3 pt-2">
                     <div class="space-y-1.5 text-sm text-reka-text-secondary">
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue" checked>
                             <span>Like New</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue">
                             <span>Excellent</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue">
                             <span>Good</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue">
                             <span>Fair</span>
                         </label>
@@ -75,7 +75,7 @@
                     <div class="flex flex-wrap gap-2">
                         <button type="button" class="rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-reka-text-secondary transition hover:border-reka-blue hover:text-reka-blue">XS</button>
                         <button type="button" class="rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-reka-text-secondary transition hover:border-reka-blue hover:text-reka-blue">S</button>
-                        <button type="button" class="rounded-full border border-reka-blue bg-reka-blue/10 px-2.5 py-1 text-xs font-medium text-reka-blue">M</button>
+                        <button type="button" class="rounded-full border border-reka-blue bg-[color:rgba(29,79,114,0.1)] px-2.5 py-1 text-xs font-medium text-reka-blue">M</button>
                         <button type="button" class="rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-reka-text-secondary transition hover:border-reka-blue hover:text-reka-blue">L</button>
                         <button type="button" class="rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-reka-text-secondary transition hover:border-reka-blue hover:text-reka-blue">XL</button>
                     </div>
@@ -150,11 +150,11 @@
                 </summary>
                 <div class="border-t border-gray-100 px-3 pb-3 pt-2">
                     <div class="space-y-1.5 text-sm text-reka-text-secondary">
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue" checked>
                             <span>Ready Stock</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <input type="checkbox" class="h-3.5 w-3.5 rounded-[4px] border border-gray-300 accent-reka-blue">
                             <span>Sold Out</span>
                         </label>
@@ -171,13 +171,13 @@
                 </summary>
                 <div class="border-t border-gray-100 px-3 pb-3 pt-2">
                     <div class="space-y-1.5 text-sm text-reka-text-secondary">
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <span class="text-reka-yellow">★★★★★</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <span class="text-reka-yellow">★★★★☆</span>
                         </label>
-                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-reka-surface/70">
+                        <label class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[color:rgba(247,245,239,0.7)]">
                             <span class="text-reka-yellow">★★★☆☆</span>
                         </label>
                     </div>

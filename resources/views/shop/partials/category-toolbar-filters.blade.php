@@ -3,7 +3,7 @@
     <form action="{{ route('category') }}" method="GET" class="flex flex-wrap items-center gap-3 rounded-3xl border border-reka-border bg-white/90 px-4 py-3 shadow-sm">
         <label class="flex items-center gap-3 text-sm text-reka-text-secondary">
             <span class="font-semibold text-reka-text">Category</span>
-            <select name="category" class="rounded-full border border-reka-border bg-white px-4 py-2 text-sm text-reka-text focus:outline-none focus:ring-2 focus:ring-reka-blue/20">
+            <select name="category" class="rounded-full border border-reka-border bg-white px-4 py-2 text-sm text-reka-text focus:outline-none focus:ring-2 focus:ring-[color:rgba(29,79,114,0.2)]">
                 <option value="">All categories</option>
                 @foreach($categories as $categoryOption)
                     <option value="{{ $categoryOption }}" @selected($selectedCategory === $categoryOption)>{{ $categoryOption }}</option>
