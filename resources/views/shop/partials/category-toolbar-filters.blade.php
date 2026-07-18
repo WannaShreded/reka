@@ -1,3 +1,4 @@
+@php($categories = $categories ?? []);@php($selectedCategory = $selectedCategory ?? null)
 <div class="sticky top-20 z-30 mb-3">
     <form action="{{ route('category') }}" method="GET" class="flex flex-wrap items-center gap-3 rounded-3xl border border-reka-border bg-white/90 px-4 py-3 shadow-sm">
         <label class="flex items-center gap-3 text-sm text-reka-text-secondary">

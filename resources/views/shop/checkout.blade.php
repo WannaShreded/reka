@@ -6,7 +6,7 @@
     <title>REKA - Checkout</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
+<body class="page-shell min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
     <header class="border-b border-reka-border bg-white/90 backdrop-blur">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
             <a href="/" class="flex items-center gap-2 text-lg font-semibold uppercase tracking-[0.2em] text-reka-blue">
@@ -33,34 +33,41 @@
                         <div class="flex h-9 w-9 items-center justify-center rounded-full bg-reka-blue text-sm font-semibold text-white">1</div>
                         <div>
                             <h2 class="text-xl font-semibold">Shipping Information</h2>
-                                <p class="text-sm text-reka-text-muted">Where should we deliver your order?</p>
+                            <p class="text-sm text-reka-text-muted">Where should we deliver your order?</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2">
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-reka-text-secondary">Full Name</label>
-                            <input name="customer_name" type="text" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="Ayu Pratama" required>
+                            <label for="customer_name" class="mb-2 block text-sm font-medium text-reka-text-secondary">Full Name</label>
+                            <input id="customer_name" name="customer_name" type="text" value="{{ old('customer_name', $user->name) }}" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="Ayu Pratama" required>
+                            @error('customer_name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-reka-text-secondary">Phone Number</label>
-                            <input name="phone" type="text" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="+62 812 3456 7890">
+                            <label for="phone" class="mb-2 block text-sm font-medium text-reka-text-secondary">Phone Number</label>
+                            <input id="phone" name="phone" type="text" value="{{ old('phone', $user->phone) }}" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="+62 812 3456 7890">
+                            @error('phone')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-reka-text-secondary">Email</label>
-                            <input name="email" type="email" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="you@example.com" required>
+                            <label for="email" class="mb-2 block text-sm font-medium text-reka-text-secondary">Email</label>
+                            <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="you@example.com" required>
+                            @error('email')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="address" class="mb-2 block text-sm font-medium text-reka-text-secondary">Address</label>
+                            <input id="address" name="address" type="text" value="{{ old('address', $shippingAddress) }}" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="Jl. Sudirman No. 12" required>
+                            @error('address')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-reka-text-secondary">Address</label>
-                            <input name="address" type="text" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="Jl. Sudirman No. 12" required>
+                            <label for="province" class="mb-2 block text-sm font-medium text-reka-text-secondary">Province</label>
+                            <input id="province" type="text" value="{{ old('province', $user->province) }}" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="DKI Jakarta">
                         </div>
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-reka-text-secondary">Province</label>
-                            <input type="text" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="DKI Jakarta">
+                            <label for="city" class="mb-2 block text-sm font-medium text-reka-text-secondary">City</label>
+                            <input id="city" type="text" value="{{ old('city', $user->city) }}" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="Jakarta Selatan">
                         </div>
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-reka-text-secondary">City</label>
-                            <input type="text" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="Jakarta Selatan">
-                        </div>
-                        <div>
-                            <label class="mb-2 block text-sm font-medium text-reka-text-secondary">Postal Code</label>
-                            <input type="text" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="12950">
+                            <label for="postal_code" class="mb-2 block text-sm font-medium text-reka-text-secondary">Postal Code</label>
+                            <input id="postal_code" type="text" value="{{ old('postal_code', $user->postal_code) }}" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 outline-none transition focus:border-reka-blue" placeholder="12950">
                         </div>
                     </div>
                 </div>

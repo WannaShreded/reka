@@ -2,7 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class ShopWorkflowTest extends TestCase
@@ -36,11 +41,39 @@ class ShopWorkflowTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_category_page_renders_filter_toolbar_without_errors(): void
+    {
+        $response = $this->get('/category');
+
+        $response->assertOk();
+        $response->assertSee('All categories');
+    }
+
+    public function test_homepage_renders_customer_entry_points(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('action="'.route('search').'"', false);
+        $response->assertSee(route('category'), false);
+    }
+
     public function test_dashboard_requires_authentication(): void
     {
         $response = $this->get('/dashboard');
 
         $response->assertRedirect('/login');
+    }
+
+    public function test_authenticated_dashboard_exposes_logout_control(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $response = $this->actingAs($user)->get('/dashboard');
+
+        $response->assertOk();
+        $response->assertSee('aria-label="Log out"', false);
+        $response->assertSee('action="'.route('logout').'"', false);
     }
 
     public function test_guest_cannot_access_customer_pages(): void
@@ -52,7 +85,7 @@ class ShopWorkflowTest extends TestCase
 
     public function test_customer_cannot_access_admin_dashboard(): void
     {
-        $user = \App\Models\User::factory()->create([
+        $user = User::factory()->create([
             'role' => 'customer',
         ]);
 
@@ -63,7 +96,7 @@ class ShopWorkflowTest extends TestCase
 
     public function test_admin_can_access_admin_dashboard(): void
     {
-        $user = \App\Models\User::factory()->create([
+        $user = User::factory()->create([
             'role' => 'admin',
         ]);
 
@@ -96,17 +129,279 @@ class ShopWorkflowTest extends TestCase
         $response->assertDontSee('Denim Jeans');
     }
 
-    public function test_product_detail_quantity_updates_the_hidden_field(): void
+    public function test_wishlist_renders_saved_products(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)->post('/wishlist/add', [
+            'product_slug' => 'linen-blouse',
+        ])->assertRedirect();
+
+        $this->actingAs($user)
+            ->get('/wishlist')
+            ->assertOk()
+            ->assertSee('Linen Blouse');
+    }
+
+    public function test_available_products_are_sorted_before_sold_out_products_across_catalog_views(): void
+    {
+        Product::create([
+            'slug' => 'sold-out-piece',
+            'name' => 'A Sold Out Piece',
+            'price' => 200000,
+            'image' => 'products/Linen Blouse.jpg',
+            'images' => ['products/Linen Blouse.jpg'],
+            'sizes' => ['M'],
+            'colors' => ['Sand'],
+            'stock' => 0,
+            'rating' => 4.2,
+            'description' => 'A sold out piece.',
+            'badge' => 'Pre-loved',
+            'category' => 'Atasan',
+        ]);
+
+        Product::create([
+            'slug' => 'available-piece',
+            'name' => 'B Available Piece',
+            'price' => 300000,
+            'image' => 'products/Linen Blouse.jpg',
+            'images' => ['products/Linen Blouse.jpg'],
+            'sizes' => ['M'],
+            'colors' => ['Sand'],
+            'stock' => 2,
+            'rating' => 4.8,
+            'description' => 'An available piece.',
+            'badge' => 'Pre-loved',
+            'category' => 'Atasan',
+        ]);
+
+        $homeResponse = $this->get('/');
+        $homeResponse->assertOk();
+        $homeResponse->assertSeeInOrder(['B Available Piece', 'A Sold Out Piece']);
+
+        $categoryResponse = $this->get('/category');
+        $categoryResponse->assertOk();
+        $categoryResponse->assertSeeInOrder(['B Available Piece', 'A Sold Out Piece']);
+
+        $searchResponse = $this->get('/search?query=piece');
+        $searchResponse->assertOk();
+        $searchResponse->assertSeeInOrder(['B Available Piece', 'A Sold Out Piece']);
+    }
+
+    public function test_wishlist_and_cart_counts_are_exposed_for_the_current_session(): void
+    {
+        $this->withSession(['wishlist' => ['linen-blouse' => true]])
+            ->getJson('/wishlist/count')
+            ->assertOk()
+            ->assertExactJson(['count' => 1]);
+
+        $this->withSession(['guest_cart' => [
+            'linen-blouse:M:Sand' => ['product_slug' => 'linen-blouse', 'quantity' => 1],
+        ]])
+            ->getJson('/cart/count')
+            ->assertOk()
+            ->assertExactJson(['count' => 1]);
+    }
+
+    public function test_product_detail_disables_buy_now_for_sold_out_products(): void
+    {
+        $product = Product::create([
+            'slug' => 'sold-out-product',
+            'name' => 'Sold Out Product',
+            'price' => 350000,
+            'image' => 'products/Linen Blouse.jpg',
+            'images' => ['products/Linen Blouse.jpg'],
+            'sizes' => ['M'],
+            'colors' => ['Sand'],
+            'stock' => 0,
+            'rating' => 4.8,
+            'description' => 'A sold out product.',
+            'badge' => 'Pre-loved',
+            'category' => 'Atasan',
+        ]);
+
+        $response = $this->get('/product/'.$product->slug);
+
+        $response->assertOk();
+        $response->assertSee('Barang Habis');
+        $response->assertDontSee('Buy It Now');
+    }
+
+    public function test_product_detail_shows_single_unit_selection(): void
     {
         $response = $this->get('/product/linen-blouse');
 
         $response->assertOk();
-        $response->assertSee('id="quantity-input"', false);
-        $response->assertSee('function updateQty(delta)', false);
+        $response->assertSee('1 unit', false);
+        $response->assertDontSee('function updateQty(delta)', false);
+        $response->assertSee(asset('images/products/Linen Blouse.jpg'), false);
+    }
+
+    public function test_checkout_prefills_customer_profile_shipping_information(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'name' => 'Ayu Customer',
+            'email' => 'ayu@example.com',
+            'phone' => '+62 812 0000 0000',
+            'address_line_1' => 'Jl. Sudirman No. 12',
+            'city' => 'Jakarta Selatan',
+            'province' => 'DKI Jakarta',
+            'postal_code' => '12950',
+            'country' => 'Indonesia',
+        ]);
+
+        $this->actingAs($user)->post('/cart/add', [
+            'product_slug' => 'linen-blouse',
+            'quantity' => 1,
+            'size' => 'M',
+            'color' => 'Sand',
+        ]);
+
+        $response = $this->actingAs($user)->get('/checkout');
+
+        $response->assertOk();
+        $response->assertSee('value="Ayu Customer"', false);
+        $response->assertSee('value="+62 812 0000 0000"', false);
+        $response->assertSee('Jl. Sudirman No. 12, Jakarta Selatan, DKI Jakarta, 12950, Indonesia');
+    }
+
+    public function test_checkout_creates_order_items_reduces_stock_and_clears_cart(): void
+    {
+        config(['services.midtrans.server_key' => 'SB-Mid-server-test']);
+        Http::fake([
+            'app.sandbox.midtrans.com/snap/v1/transactions' => Http::response([
+                'token' => 'snap-token-test',
+                'redirect_url' => 'https://app.sandbox.midtrans.com/snap/v2/vtweb/snap-token-test',
+            ]),
+        ]);
+
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)->post('/cart/add', [
+            'product_slug' => 'linen-blouse',
+            'quantity' => 1,
+            'size' => 'M',
+            'color' => 'Sand',
+        ]);
+
+        $response = $this->actingAs($user)->post('/checkout', [
+            'customer_name' => 'Ayu Customer',
+            'email' => 'ayu@example.com',
+            'phone' => '+62 812 0000 0000',
+            'address' => 'Jl. Sudirman No. 12',
+            'shipping_method' => 'standard',
+            'payment_method' => 'bank_transfer',
+        ]);
+
+        $order = Order::firstOrFail();
+        $product = Product::where('slug', 'linen-blouse')->firstOrFail();
+
+        $response->assertRedirect('https://app.sandbox.midtrans.com/snap/v2/vtweb/snap-token-test');
+        $this->assertSame('pending', $order->refresh()->payment_status);
+        $this->assertSame('pending_payment', $order->status);
+        $this->assertSame('snap-token-test', $order->snap_token);
+        $this->assertSame(1, $order->orderItems()->count());
+        $this->assertDatabaseHas('order_items', [
+            'order_id' => $order->id,
+            'product_slug' => 'linen-blouse',
+            'quantity' => 1,
+            'unit_price' => 350000,
+            'line_total' => 350000,
+        ]);
+        $this->assertSame(9, $product->stock);
+        $this->assertSame([], Cart::where('user_id', $user->id)->firstOrFail()->items);
+    }
+
+    public function test_sold_out_products_cannot_be_added_to_cart_and_show_sold_out_badge(): void
+    {
+        $product = Product::create([
+            'slug' => 'linen-blouse',
+            'name' => 'Linen Blouse',
+            'price' => 350000,
+            'image' => 'products/Linen Blouse.jpg',
+            'images' => ['products/Linen Blouse.jpg'],
+            'sizes' => ['M'],
+            'colors' => ['Sand'],
+            'stock' => 0,
+            'rating' => 4.8,
+            'description' => 'A pre-loved linen blouse.',
+            'badge' => 'Pre-loved',
+            'category' => 'Atasan',
+        ]);
+
+        $response = $this->post('/cart/add', [
+            'product_slug' => $product->slug,
+            'quantity' => 1,
+            'size' => 'M',
+            'color' => 'Sand',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['stock']);
+
+        $detailResponse = $this->get('/product/'.$product->slug);
+        $detailResponse->assertOk();
+        $detailResponse->assertSee('Barang Habis');
+        $detailResponse->assertDontSee('Add to Cart');
+    }
+
+    public function test_quantity_cannot_exceed_one_for_single_unit_products(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $response = $this->actingAs($user)->post('/cart/add', [
+            'product_slug' => 'linen-blouse',
+            'quantity' => 2,
+            'size' => 'M',
+            'color' => 'Sand',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['quantity']);
+        $this->assertSame([], Cart::where('user_id', $user->id)->first()?->items ?? []);
+    }
+
+    public function test_checkout_rolls_back_when_stock_is_not_available(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)->post('/cart/add', [
+            'product_slug' => 'linen-blouse',
+            'quantity' => 1,
+            'size' => 'M',
+            'color' => 'Sand',
+        ]);
+
+        Product::where('slug', 'linen-blouse')->update(['stock' => 0]);
+
+        $response = $this->actingAs($user)->post('/checkout', [
+            'customer_name' => 'Ayu Customer',
+            'email' => 'ayu@example.com',
+            'phone' => '+62 812 0000 0000',
+            'address' => 'Jl. Sudirman No. 12',
+            'shipping_method' => 'standard',
+            'payment_method' => 'bank_transfer',
+        ]);
+
+        $response->assertRedirect(route('cart'));
+        $response->assertSessionHasErrors(['cart']);
+        $this->assertDatabaseCount('orders', 0);
+        $this->assertDatabaseCount('order_items', 0);
+        $this->assertSame(0, Product::where('slug', 'linen-blouse')->firstOrFail()->stock);
+        $this->assertNotEmpty(Cart::where('user_id', $user->id)->firstOrFail()->items);
     }
 
     public function test_complete_customer_journey_from_guest_to_logout(): void
     {
+        config(['services.midtrans.server_key' => 'SB-Mid-server-test']);
+        Http::fake([
+            'app.sandbox.midtrans.com/snap/v1/transactions' => Http::response([
+                'token' => 'snap-token-test',
+                'redirect_url' => 'https://app.sandbox.midtrans.com/snap/v2/vtweb/snap-token-test',
+            ]),
+        ]);
+
         $response = $this->post('/register', [
             'name' => 'Ayu Customer',
             'email' => 'ayu@example.com',
@@ -114,10 +409,10 @@ class ShopWorkflowTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertRedirect('/cart');
+        $response->assertRedirect('/dashboard');
 
         $this->actingAs(
-            \App\Models\User::where('email', 'ayu@example.com')->firstOrFail()
+            User::where('email', 'ayu@example.com')->firstOrFail()
         );
 
         $this->get('/category')->assertOk();
@@ -126,7 +421,7 @@ class ShopWorkflowTest extends TestCase
 
         $this->post('/cart/add', [
             'product_slug' => 'linen-blouse',
-            'quantity' => 2,
+            'quantity' => 1,
             'size' => 'M',
             'color' => 'Sand',
         ])->assertRedirect();
@@ -147,7 +442,7 @@ class ShopWorkflowTest extends TestCase
             'address' => 'Jl. Sudirman No. 12',
             'shipping_method' => 'standard',
             'payment_method' => 'credit_card',
-        ])->assertRedirect();
+        ])->assertRedirect('https://app.sandbox.midtrans.com/snap/v2/vtweb/snap-token-test');
 
         $this->get('/orders')->assertOk()->assertSee('RKA-');
 

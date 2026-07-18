@@ -6,7 +6,7 @@
     <title>REKA - Order History</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
+<body class="page-shell min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
     <div class="min-h-screen bg-[linear-gradient(135deg,_#ffffff_0%,_#f7f6f2_100%)]">
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
             <div class="mb-8 flex flex-col gap-4 rounded-[28px] border border-reka-border bg-white p-6 shadow-[0_12px_35px_rgba(17,17,17,0.06)] sm:flex-row sm:items-center sm:justify-between">

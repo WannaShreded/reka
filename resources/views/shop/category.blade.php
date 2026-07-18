@@ -8,7 +8,7 @@
 </head>
 <body class="page-shell bg-[#f7f7f2] text-reka-text antialiased">
     <header class="sticky top-0 z-40 border-b border-reka-border/80 bg-white/90 backdrop-blur">
-        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
             <a href="/" class="flex items-center gap-2 text-xl font-bold tracking-[0.25em] text-reka-blue uppercase">
                 <span class="flex h-8 w-8 items-center justify-center rounded-md bg-reka-yellow text-sm font-black text-reka-text">R</span>
                 REKA
@@ -16,8 +16,8 @@
             <nav class="hidden items-center gap-6 text-sm font-medium text-reka-text-secondary md:flex">
                 <a href="/" class="transition hover:text-reka-blue">Home</a>
                 <a href="/category" class="transition hover:text-reka-blue">Shop</a>
-                <a href="#" class="transition hover:text-reka-blue">Collections</a>
-                <a href="#" class="transition hover:text-reka-blue">Inspiration</a>
+                <a href="/#featured" class="transition hover:text-reka-blue">Collections</a>
+                <a href="/#promotions" class="transition hover:text-reka-blue">Inspiration</a>
             </nav>
             <a href="/category" class="btn-secondary px-4 py-2 text-sm">Browse</a>
         </div>
@@ -35,10 +35,10 @@
         </nav>
 
         <div class="mt-4">
-            @include('partials.category-toolbar-filters')
+            @include('shop.partials.category-toolbar-filters')
 
             <section class="mt-0">
-                <div class="panel-card flex flex-col gap-4 px-5 py-5 md:flex-row md:items-end md:justify-between">
+                <div class="surface-card flex flex-col gap-4 px-5 py-5 md:flex-row md:items-end md:justify-between">
                     <div>
                         <p class="page-kicker">Collection</p>
                         <h1 class="page-heading mt-2">Clothing Collection</h1>
@@ -51,10 +51,10 @@
 
                 <div class="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
                     @foreach($products as $product)
-                        <article class="section-card group flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-product-card data-sizes="{{ implode(',', $product->sizes) }}">
+                        <article class="section-card group flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]" data-product-card data-sizes="{{ implode(',', $product->sizes) }}">
                             <div class="relative">
                                 <a href="{{ route('product-detail', ['slug' => $product->slug]) }}" class="block">
-                                    <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105">
+                                    <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                                 </a>
                                 <span class="absolute left-3 top-3 rounded-full bg-reka-blue px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">{{ $product->badge ?? 'New' }}</span>
                                 <form action="{{ route('wishlist.add') }}" method="POST" class="absolute right-3 top-3">
@@ -75,8 +75,15 @@
                                 <h3 class="mt-4 text-lg font-semibold text-reka-text"><a href="{{ route('product-detail', ['slug' => $product->slug]) }}" class="hover:text-reka-blue">{{ $product->name }}</a></h3>
                                 <p class="mt-2 text-sm leading-6 text-reka-text-muted line-clamp-2">{{ $product->description }}</p>
                                 <div class="mt-5 flex items-center justify-between pt-3 border-t border-reka-border">
-                                    <span class="text-lg font-bold text-reka-text">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                                    <a href="{{ route('product-detail', ['slug' => $product->slug]) }}" class="rounded-full bg-reka-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">View</a>
+                                    <div>
+                                        <span class="text-lg font-bold text-reka-text">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                        @if((int) $product->stock > 0)
+                                            <p class="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Tersedia</p>
+                                        @else
+                                            <p class="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-rose-600">Barang Habis</p>
+                                        @endif
+                                    </div>
+                                    <a href="{{ route('product-detail', ['slug' => $product->slug]) }}" class="btn-primary px-4 py-2 text-sm">View</a>
                                 </div>
                             </div>
                         </article>

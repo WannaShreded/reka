@@ -1,3 +1,171 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --reka-blue: #1d4f72;
+    --reka-blue-dark: #153b54;
+    --reka-blue-light: #eef6fb;
+    --reka-yellow: #f3d04b;
+    --reka-yellow-dark: #e0b829;
+    --reka-text: #181818;
+    --reka-text-secondary: #4b5563;
+    --reka-text-muted: #6b7280;
+    --reka-surface: #f7f5ef;
+    --reka-border: #e7e2d8;
+    --reka-success: #2f7d5f;
+    --reka-error: #b5474f;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Figtree', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--reka-text);
+    background-color: #fcfbf8;
+    line-height: 1.6;
+}
+
+::selection {
+    background-color: var(--reka-blue-light);
+    color: var(--reka-blue);
+}
+
+img {
+    content-visibility: auto;
+}
+
+:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(29, 79, 114, 0.18);
+}
+
+@layer base {
+    a,
+    button,
+    input,
+    select,
+    textarea {
+        @apply transition-all duration-200;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-full bg-reka-blue px-5 py-3 text-sm font-semibold text-white shadow-sm;
+        background-color: var(--reka-blue);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--reka-blue-dark);
+        box-shadow: 0 12px 24px rgba(29, 79, 114, 0.18);
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center rounded-full border border-reka-border bg-white px-5 py-3 text-sm font-semibold text-reka-text-secondary shadow-sm;
+        border-color: var(--reka-border);
+        color: var(--reka-text-secondary);
+        background-color: white;
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--reka-blue);
+        color: var(--reka-blue);
+        background-color: var(--reka-surface);
+    }
+
+    .surface-card {
+        @apply rounded-[28px] border border-reka-border bg-white shadow-[0_12px_35px_rgba(17,17,17,0.06)];
+    }
+
+    .section-card {
+        @apply rounded-[24px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)];
+    }
+
+    .empty-state {
+        @apply rounded-[28px] border border-dashed border-reka-border bg-white/80 p-8 text-center text-reka-text-muted shadow-[0_10px_30px_rgba(17,17,17,0.04)];
+    }
+
+    .page-shell {
+        @apply min-h-screen bg-[linear-gradient(135deg,_#fffcf5_0%,_#f7f6f2_100%)];
+    }
+
+    .page-shell-inner {
+        @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .page-kicker {
+        @apply text-sm font-semibold uppercase tracking-[0.25em] text-reka-blue;
+    }
+
+    .page-heading {
+        @apply text-3xl font-semibold tracking-tight text-reka-text sm:text-4xl;
+    }
+
+    .page-subtitle {
+        @apply mt-3 text-sm leading-7 text-reka-text-muted sm:text-base;
+    }
+
+    .hero-gradient {
+        background: linear-gradient(90deg, rgba(17, 17, 17, 0.82) 0%, rgba(17, 17, 17, 0.44) 55%, rgba(17, 17, 17, 0.2) 100%);
+    }
+}
+
+[data-animate] {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: revealUp 0.6s ease-out forwards;
+}
+
+@keyframes revealUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    [data-animate] {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.bg-reka-blue { background-color: var(--reka-blue) !important; }
+.bg-reka-blue-dark { background-color: var(--reka-blue-dark) !important; }
+.bg-reka-blue-light { background-color: var(--reka-blue-light) !important; }
+.bg-reka-yellow { background-color: var(--reka-yellow) !important; }
+.bg-reka-yellow-dark { background-color: var(--reka-yellow-dark) !important; }
+.bg-reka-surface { background-color: var(--reka-surface) !important; }
+.bg-reka-success { background-color: var(--reka-success) !important; }
+.bg-reka-error { background-color: var(--reka-error) !important; }
+
+.text-reka-blue { color: var(--reka-blue) !important; }
+.text-reka-blue-dark { color: var(--reka-blue-dark) !important; }
+.text-reka-yellow { color: var(--reka-yellow) !important; }
+.text-reka-text { color: var(--reka-text) !important; }
+.text-reka-text-secondary { color: var(--reka-text-secondary) !important; }
+.text-reka-text-muted { color: var(--reka-text-muted) !important; }
+.text-reka-success { color: var(--reka-success) !important; }
+.text-reka-error { color: var(--reka-error) !important; }
+
+.border-reka-blue { border-color: var(--reka-blue) !important; }
+.border-reka-border { border-color: var(--reka-border) !important; }
+
+.hover\:text-reka-blue:hover { color: var(--reka-blue) !important; }
+.hover\:bg-reka-surface:hover { background-color: var(--reka-surface) !important; }
+.hover\:bg-reka-blue-dark:hover { background-color: var(--reka-blue-dark) !important; }
+.hover\:bg-reka-yellow-dark:hover { background-color: var(--reka-yellow-dark) !important; }

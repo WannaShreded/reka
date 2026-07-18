@@ -22,6 +22,14 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'phone',
+        'date_of_birth',
+        'address_line_1',
+        'address_line_2',
+        'city',
+        'province',
+        'postal_code',
+        'country',
     ];
 
     public function isAdmin(): bool
@@ -44,6 +52,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'date_of_birth' => 'date',
         ];
     }
 }

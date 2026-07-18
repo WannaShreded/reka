@@ -5,35 +5,63 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
+use App\Services\MidtransService;
+use Database\Seeders\ProductSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 
 class ShopController extends Controller
 {
+    public function home()
+    {
+        $this->ensureProductsAvailable();
+
+        return view('shop.home', [
+            'featuredProducts' => Schema::hasTable('products')
+                ? Product::query()
+                    ->orderByRaw('CASE WHEN stock > 0 THEN 0 ELSE 1 END')
+                    ->orderBy('name')
+                    ->limit(4)
+                    ->get()
+                    ->map(fn (Product $product) => $this->presentProduct($product))
+                : collect(),
+        ]);
+    }
+
     public function productDetail(string $slug)
     {
+        $this->ensureProductsAvailable();
+
         $productModel = Product::where('slug', $slug)->first();
         abort_unless($productModel, 404);
 
-        $product = $productModel->toArray();
+        $product = $this->presentProduct($productModel);
 
-        return view('product-detail', [
+        return view('shop.product-detail', [
             'product' => $product,
             'relatedProducts' => Product::where('slug', '!=', $slug)
                 ->limit(2)
                 ->get()
-                ->keyBy('slug')
-                ->toArray(),
+                ->map(fn (Product $product) => $this->presentProduct($product))
+                ->keyBy('slug'),
         ]);
     }
 
     public function category(Request $request)
     {
+        $this->ensureProductsAvailable();
+
         $selectedCategory = $request->query('category');
 
-        $productsQuery = Product::orderBy('name');
+        $productsQuery = Product::query()
+            ->orderByRaw('CASE WHEN stock > 0 THEN 0 ELSE 1 END')
+            ->orderBy('name');
         if ($selectedCategory) {
             $productsQuery->where('category', $selectedCategory);
         }
@@ -44,7 +72,7 @@ class ShopController extends Controller
             ->orderBy('category')
             ->pluck('category');
 
-        return view('category', [
+        return view('shop.category', [
             'products' => $products,
             'categories' => $categories,
             'selectedCategory' => $selectedCategory,
@@ -56,19 +84,24 @@ class ShopController extends Controller
         $cart = $this->getCart();
         $items = $cart['items'] ?? [];
 
-        return view('cart', [
+        $items = $this->presentCartItems($items);
+        $subtotal = $this->calculateSubtotal($items);
+
+        return view('shop.cart', [
             'items' => $items,
-            'subtotal' => $this->calculateSubtotal($items),
+            'subtotal' => $subtotal,
             'shippingCost' => 0,
-            'total' => $this->calculateSubtotal($items),
+            'total' => $subtotal,
         ]);
     }
 
     public function addToCart(Request $request)
     {
+        $this->ensureProductsAvailable();
+
         $data = $request->validate([
             'product_slug' => ['required', 'string'],
-            'quantity' => ['required', 'integer', 'min:1'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:1'],
             'size' => ['required', 'string'],
             'color' => ['nullable', 'string'],
         ]);
@@ -78,13 +111,13 @@ class ShopController extends Controller
         }
 
         $productModel = Product::where('slug', $data['product_slug'])->first();
-        if (!$productModel) {
+        if (! $productModel) {
             return back()->withErrors(['product' => 'Product not found.']);
         }
 
         $product = $productModel->toArray();
 
-        if (!in_array($data['size'], $product['sizes'] ?? [], true)) {
+        if (! in_array($data['size'], $product['sizes'] ?? [], true)) {
             return back()->withErrors(['size' => 'The selected size is unavailable.']);
         }
 
@@ -94,10 +127,18 @@ class ShopController extends Controller
 
         $cart = $this->getCart();
         $items = $cart['items'] ?? [];
-        $key = $data['product_slug'] . ':' . $data['size'] . ':' . ($data['color'] ?? '');
+        $key = $data['product_slug'].':'.$data['size'].':'.($data['color'] ?? '');
+
+        $existingKeys = array_keys($items);
+        if ($existingKeys !== []) {
+            $matchingKey = collect($existingKeys)->first(fn ($existingKey) => str_starts_with($existingKey, $data['product_slug'].':'));
+            if ($matchingKey !== null) {
+                unset($items[$matchingKey]);
+            }
+        }
 
         if (isset($items[$key])) {
-            $items[$key]['quantity'] += $data['quantity'];
+            $items[$key]['quantity'] = 1;
         } else {
             $items[$key] = [
                 'product_slug' => $data['product_slug'],
@@ -105,8 +146,9 @@ class ShopController extends Controller
                 'price' => $product['price'],
                 'size' => $data['size'],
                 'color' => $data['color'] ?? null,
-                'quantity' => $data['quantity'],
+                'quantity' => 1,
                 'image' => $product['image'],
+                'image_url' => $this->imageUrl($product['image']),
             ];
         }
 
@@ -118,14 +160,14 @@ class ShopController extends Controller
     public function updateCart(Request $request, string $key)
     {
         $data = $request->validate([
-            'quantity' => ['required', 'integer', 'min:1'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:1'],
         ]);
 
         $cart = $this->getCart();
         $items = $cart['items'] ?? [];
 
         if (isset($items[$key])) {
-            $items[$key]['quantity'] = $data['quantity'];
+            $items[$key]['quantity'] = 1;
             $this->persistCart($items);
         }
 
@@ -144,8 +186,9 @@ class ShopController extends Controller
 
     public function checkout()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             Session::put('checkout_required', true);
+
             return redirect()->route('login')->with('checkout_required', true);
         }
 
@@ -159,17 +202,23 @@ class ShopController extends Controller
             return redirect()->route('cart')->withErrors(['cart' => 'Your cart is empty.']);
         }
 
-        return view('checkout', [
+        $items = $this->presentCartItems($items);
+        $user = Auth::user();
+        $subtotal = $this->calculateSubtotal($items);
+
+        return view('shop.checkout', [
             'items' => $items,
-            'subtotal' => $this->calculateSubtotal($items),
+            'subtotal' => $subtotal,
             'shippingCost' => 0,
-            'total' => $this->calculateSubtotal($items),
+            'total' => $subtotal,
+            'user' => $user,
+            'shippingAddress' => $this->defaultShippingAddress($user),
         ]);
     }
 
-    public function placeOrder(Request $request)
+    public function placeOrder(Request $request, MidtransService $midtrans)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login');
         }
 
@@ -182,8 +231,8 @@ class ShopController extends Controller
             'email' => ['required', 'email'],
             'phone' => ['nullable', 'string'],
             'address' => ['required', 'string'],
-            'shipping_method' => ['required', 'string'],
-            'payment_method' => ['required', 'string'],
+            'shipping_method' => ['required', 'string', Rule::in(['standard', 'express'])],
+            'payment_method' => ['required', 'string', Rule::in(['credit_card', 'bank_transfer', 'e_wallet', 'cod'])],
         ]);
 
         $cart = $this->getCart();
@@ -192,73 +241,133 @@ class ShopController extends Controller
             return redirect()->route('cart')->withErrors(['cart' => 'Your cart is empty.']);
         }
 
-        $subtotal = $this->calculateSubtotal($items);
-        $shippingCost = $data['shipping_method'] === 'express' ? 250000 : 0;
-        $total = $subtotal + $shippingCost;
+        try {
+            $order = DB::transaction(function () use ($data, $items) {
+                $validatedItems = $this->validateCartStock($items);
+                $orderItemsSnapshot = $this->orderItemsSnapshot($validatedItems);
+                $subtotal = $this->calculateSubtotal($orderItemsSnapshot);
+                $shippingCost = $data['shipping_method'] === 'express' ? 250000 : 0;
+                $total = $subtotal + $shippingCost;
 
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'order_number' => 'RKA-' . now()->format('Ymd') . '-' . str_pad((string) Order::count() + 1, 4, '0', STR_PAD_LEFT),
-            'status' => 'pending',
-            'customer_name' => $data['customer_name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
-            'address' => $data['address'],
-            'shipping_method' => $data['shipping_method'],
-            'payment_method' => $data['payment_method'],
-            'items' => $items,
-            'subtotal' => $subtotal,
-            'shipping_cost' => $shippingCost,
-            'total' => $total,
-        ]);
+                $order = Order::create([
+                    'user_id' => Auth::id(),
+                    'order_number' => $this->generateOrderNumber(),
+                    'status' => 'pending',
+                    'customer_name' => $data['customer_name'],
+                    'email' => $data['email'],
+                    'phone' => $data['phone'] ?? null,
+                    'address' => $data['address'],
+                    'shipping_method' => $data['shipping_method'],
+                    'payment_method' => $data['payment_method'],
+                    'items' => $orderItemsSnapshot,
+                    'subtotal' => $subtotal,
+                    'shipping_cost' => $shippingCost,
+                    'total' => $total,
+                ]);
+
+                foreach ($validatedItems as $item) {
+                    $product = $item['product_model'];
+                    $quantity = (int) $item['quantity'];
+
+                    $order->orderItems()->create([
+                        'product_id' => $product->id,
+                        'product_slug' => $product->slug,
+                        'product_name' => $product->name,
+                        'size' => $item['size'] ?? null,
+                        'color' => $item['color'] ?? null,
+                        'quantity' => $quantity,
+                        'unit_price' => (int) $product->price,
+                        'line_total' => (int) $product->price * $quantity,
+                        'image' => $product->image,
+                    ]);
+
+                    $product->decrement('stock', $quantity);
+                }
+
+                return $order;
+            });
+        } catch (\RuntimeException $exception) {
+            return redirect()->route('cart')->withErrors(['cart' => $exception->getMessage()]);
+        }
 
         $this->persistCart([]);
 
-        return redirect()->route('order-confirmation', ['order' => $order->id])->with('success', 'Checkout complete.');
+        try {
+            $snap = $midtrans->createSnapTransaction($order->load('orderItems'));
+
+            $order->update([
+                'payment_status' => 'pending',
+                'status' => 'pending_payment',
+                'midtrans_order_id' => $order->order_number,
+                'midtrans_transaction_id' => $snap['transaction_id'] ?? null,
+                'snap_token' => $snap['token'] ?? null,
+                'snap_redirect_url' => $snap['redirect_url'] ?? null,
+            ]);
+
+            return redirect()->away($snap['redirect_url']);
+        } catch (\Throwable $exception) {
+            $order->update([
+                'payment_status' => 'failed',
+                'status' => 'payment_failed',
+            ]);
+
+            return redirect()
+                ->route('order-confirmation', ['order' => $order->id])
+                ->withErrors(['payment' => 'Order was created, but Midtrans payment could not be started. Please contact support.']);
+        }
     }
 
     public function orderConfirmation(Order $order)
     {
-        if (!Auth::check() || $order->user_id !== Auth::id() || Auth::user()->isAdmin()) {
+        if (! Auth::check() || $order->user_id !== Auth::id() || Auth::user()->isAdmin()) {
             abort(403);
         }
 
-        return view('order-confirmation', ['order' => $order]);
+        return view('shop.order-confirmation', ['order' => $order->load('orderItems')]);
     }
 
     public function orderHistory()
     {
-        if (!Auth::check() || Auth::user()->isAdmin()) {
+        if (! Auth::check() || Auth::user()->isAdmin()) {
             abort(403);
         }
 
-        $orders = Order::where('user_id', Auth::id())->latest()->get();
+        $orders = Order::where('user_id', Auth::id())->with('orderItems')->latest()->get();
 
-        return view('orders', ['orders' => $orders]);
+        return view('shop.orders', ['orders' => $orders]);
     }
 
     public function search(Request $request)
     {
+        $this->ensureProductsAvailable();
+
         $query = trim((string) $request->input('query', ''));
-        $products = Product::orderBy('name')->get()->keyBy('slug')->toArray();
+        $products = Product::query()
+            ->orderByRaw('CASE WHEN stock > 0 THEN 0 ELSE 1 END')
+            ->orderBy('name')
+            ->get();
 
         if ($query !== '') {
             $needle = mb_strtolower($query);
-            $products = array_filter($products, function (array $product) use ($needle): bool {
+            $products = $products->filter(function (Product $product) use ($needle): bool {
                 $haystack = mb_strtolower(implode(' ', [
-                    $product['name'] ?? '',
-                    $product['description'] ?? '',
-                    $product['slug'] ?? '',
-                    implode(' ', $product['colors'] ?? []),
-                    implode(' ', $product['sizes'] ?? []),
-                    $product['category'] ?? '',
+                    $product->name,
+                    $product->description,
+                    $product->slug,
+                    implode(' ', $product->colors ?? []),
+                    implode(' ', $product->sizes ?? []),
+                    $product->category,
                 ]));
 
                 return str_contains($haystack, $needle);
             });
         }
 
-        return view('search', [
+        $products = $products
+            ->map(fn (Product $product) => $this->presentProduct($product))
+            ->keyBy('slug');
+
+        return view('shop.search', [
             'products' => $products,
             'query' => $query,
         ]);
@@ -266,25 +375,24 @@ class ShopController extends Controller
 
     public function wishlist()
     {
-        $wishlistSlugs = Session::get('wishlist', []);
+        $this->ensureProductsAvailable();
+
+        $wishlistSlugs = $this->getWishlist();
         $wishlist = [];
 
-        if (!empty($wishlistSlugs)) {
+        if (! empty($wishlistSlugs)) {
             $products = Product::whereIn('slug', array_keys($wishlistSlugs))
                 ->get()
-                ->keyBy('slug')
-                ->toArray();
+                ->keyBy('slug');
 
             foreach (array_keys($wishlistSlugs) as $slug) {
                 if (isset($products[$slug])) {
-                    $product = $products[$slug];
-                    $product['slug'] = $slug;
-                    $wishlist[] = $product;
+                    $wishlist[] = $this->presentProduct($products[$slug]);
                 }
             }
         }
 
-        return view('wishlist', ['wishlist' => $wishlist]);
+        return view('shop.wishlist', ['wishlist' => $wishlist]);
     }
 
     public function addToWishlist(Request $request)
@@ -293,7 +401,7 @@ class ShopController extends Controller
             'product_slug' => ['required', 'string'],
         ]);
 
-        $wishlist = Session::get('wishlist', []);
+        $wishlist = $this->getWishlist();
         $wishlist[$data['product_slug']] = true;
         Session::put('wishlist', $wishlist);
 
@@ -302,16 +410,26 @@ class ShopController extends Controller
 
     public function removeFromWishlist(string $slug)
     {
-        $wishlist = Session::get('wishlist', []);
+        $wishlist = $this->getWishlist();
         unset($wishlist[$slug]);
         Session::put('wishlist', $wishlist);
 
         return redirect()->back()->with('success', 'Removed from wishlist.');
     }
 
+    public function cartCount(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(['count' => count($this->getCart()['items'] ?? [])]);
+    }
+
+    public function wishlistCount(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(['count' => count($this->getWishlist())]);
+    }
+
     public function loginView()
     {
-        return view('login');
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -321,16 +439,17 @@ class ShopController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($data)) {
+        if (Auth::attempt($data, $request->boolean('remember'))) {
             $request->session()->regenerate();
             $this->mergeGuestCart();
-            Session::forget('checkout_required');
+            $checkoutRequired = Session::pull('checkout_required', false);
 
             if (Auth::user()->isAdmin()) {
                 return redirect()->intended(route('admin-dashboard'))->with('success', 'Welcome back!');
             }
 
-            $redirectTo = Session::get('checkout_required') ? '/checkout' : '/cart';
+            $redirectTo = $checkoutRequired ? route('checkout') : route('dashboard');
+
             return redirect()->intended($redirectTo)->with('success', 'Welcome back!');
         }
 
@@ -339,7 +458,7 @@ class ShopController extends Controller
 
     public function registerView()
     {
-        return view('register');
+        return view('auth.register');
     }
 
     public function dashboard()
@@ -349,22 +468,22 @@ class ShopController extends Controller
 
     public function profile()
     {
-        return view('profile', ['user' => Auth::user()]);
+        return view('profile.edit', ['user' => Auth::user()]);
     }
 
     public function settings()
     {
-        return view('profile', ['user' => Auth::user()]);
+        return view('profile.edit', ['user' => Auth::user()]);
     }
 
     public function adminDashboard()
     {
-        return view('admin-dashboard');
+        return view('admin.dashboard');
     }
 
     public function support()
     {
-        return view('support');
+        return view('shop.support');
     }
 
     public function logout(Request $request)
@@ -384,7 +503,7 @@ class ShopController extends Controller
             'password' => ['required', 'min:6', 'confirmed'],
         ]);
 
-        $user = \App\Models\User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -397,7 +516,21 @@ class ShopController extends Controller
             return redirect()->route('admin-dashboard')->with('success', 'Account created successfully.');
         }
 
-        return redirect('/cart')->with('success', 'Account created successfully.');
+        return redirect()->route('dashboard')->with('success', 'Account created successfully.');
+    }
+
+    private function ensureProductsAvailable(): void
+    {
+        if (! Schema::hasTable('products')) {
+            return;
+        }
+
+        if (Product::query()->exists()) {
+            return;
+        }
+
+        $seeder = new ProductSeeder;
+        $seeder->run();
     }
 
     private function getCart(): array
@@ -418,10 +551,16 @@ class ShopController extends Controller
             $cart = Cart::firstOrNew(['user_id' => Auth::id()]);
             $cart->items = $items;
             $cart->save();
+
             return;
         }
 
         Session::put('guest_cart', $items);
+    }
+
+    private function getWishlist(): array
+    {
+        return array_filter((array) Session::get('wishlist', []), static fn ($value) => (bool) $value);
     }
 
     private function mergeGuestCart(): void
@@ -445,5 +584,119 @@ class ShopController extends Controller
         }
 
         return $subtotal;
+    }
+
+    private function orderItemsSnapshot(array $items): array
+    {
+        return array_map(function (array $item): array {
+            unset($item['product_model']);
+
+            return $item;
+        }, $items);
+    }
+
+    private function validateCartStock(array $items): array
+    {
+        $validatedItems = [];
+
+        foreach ($items as $item) {
+            $slug = $item['product_slug'] ?? null;
+            $quantity = (int) ($item['quantity'] ?? 0);
+
+            if (! $slug || $quantity < 1) {
+                throw new \RuntimeException('Your cart contains an invalid item.');
+            }
+
+            $product = Product::where('slug', $slug)->lockForUpdate()->first();
+
+            if (! $product) {
+                throw new \RuntimeException(($item['name'] ?? 'One item').' is no longer available.');
+            }
+
+            if ($product->stock < $quantity) {
+                throw new \RuntimeException($product->name.' only has '.$product->stock.' item(s) left in stock.');
+            }
+
+            $validatedItems[] = [
+                'product_slug' => $product->slug,
+                'name' => $product->name,
+                'price' => (int) $product->price,
+                'size' => $item['size'] ?? null,
+                'color' => $item['color'] ?? null,
+                'quantity' => $quantity,
+                'image' => $product->image,
+                'image_url' => $this->imageUrl($product->image),
+                'product_model' => $product,
+            ];
+        }
+
+        return $validatedItems;
+    }
+
+    private function generateOrderNumber(): string
+    {
+        return 'RKA-'.now()->format('Ymd').'-'.str_pad((string) (Order::lockForUpdate()->count() + 1), 4, '0', STR_PAD_LEFT);
+    }
+
+    private function presentProduct(Product $product): array
+    {
+        $data = $product->toArray();
+        $images = $product->images ?? [];
+
+        if (! is_array($images)) {
+            $images = json_decode((string) $images, true) ?: [];
+        }
+
+        if (empty($images) && ! empty($data['image'])) {
+            $images = [$data['image']];
+        }
+
+        $data['images'] = $images;
+        $data['image_url'] = $this->imageUrl($data['image'] ?? null);
+        $data['image_urls'] = array_map(fn (?string $image) => $this->imageUrl($image), $images);
+        $data['is_available'] = (int) ($data['stock'] ?? 0) > 0;
+        $data['availability_label'] = $data['is_available'] ? 'Tersedia' : 'Barang Habis';
+
+        return $data;
+    }
+
+    private function presentCartItems(array $items): array
+    {
+        foreach ($items as $key => $item) {
+            $product = Product::where('slug', $item['product_slug'] ?? null)->first();
+            $stock = $product?->stock ?? 0;
+
+            $items[$key]['stock'] = $stock;
+            $items[$key]['is_available'] = (int) $stock > 0;
+            $items[$key]['availability_label'] = (int) $stock > 0 ? 'Tersedia' : 'Barang Habis';
+            $items[$key]['image_url'] = $item['image_url'] ?? $this->imageUrl($item['image'] ?? null);
+        }
+
+        return $items;
+    }
+
+    private function imageUrl(?string $image): string
+    {
+        if (! $image) {
+            return asset('images/products/Linen Blouse.jpg');
+        }
+
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://') || str_starts_with($image, '/')) {
+            return $image;
+        }
+
+        return asset('images/'.ltrim($image, '/'));
+    }
+
+    private function defaultShippingAddress($user): string
+    {
+        return collect([
+            $user->address_line_1 ?? null,
+            $user->address_line_2 ?? null,
+            $user->city ?? null,
+            $user->province ?? null,
+            $user->postal_code ?? null,
+            $user->country ?? null,
+        ])->filter()->implode(', ');
     }
 }

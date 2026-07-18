@@ -14,6 +14,22 @@ class ProductSeeder extends Seeder
     {
         $products = [
             [
+                'slug' => 'linen-blouse',
+                'name' => 'Linen Blouse',
+                'price' => 350000,
+                'image' => 'products/Linen Blouse.jpg',
+                'images' => json_encode([
+                    'products/Linen Blouse.jpg',
+                ]),
+                'sizes' => ['S', 'M', 'L'],
+                'colors' => ['Sand', 'Olive', 'White'],
+                'stock' => 10,
+                'rating' => '4.8',
+                'description' => 'Lightweight linen blouse for everyday elegance.',
+                'badge' => 'New',
+                'category' => 'Blouse',
+            ],
+            [
                 'slug' => 'HO001',
                 'name' => 'Hoodie Nike Hitam',
                 'price' => 150000,

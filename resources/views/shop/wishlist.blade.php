@@ -6,7 +6,7 @@
     <title>REKA - Wishlist</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
+<body class="page-shell min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
     <div class="min-h-screen bg-[linear-gradient(135deg,_#ffffff_0%,_#f7f6f2_100%)]">
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
             <div class="mb-8 flex flex-col gap-4 rounded-[28px] border border-reka-border bg-white p-6 shadow-[0_12px_35px_rgba(17,17,17,0.06)] sm:flex-row sm:items-end sm:justify-between">
@@ -23,7 +23,7 @@
             <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
                 @forelse($wishlist as $product)
                     <article class="group overflow-hidden rounded-[28px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
-                        <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}"><img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="h-56 w-full object-cover transition duration-500 group-hover:scale-105"></a>
+                        <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}"><img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}" class="h-56 w-full object-cover transition duration-500 group-hover:scale-105"></a>
                         <div class="p-5">
                             <h2 class="text-lg font-semibold"><a href="{{ route('product-detail', ['slug' => $product['slug']]) }}" class="hover:text-reka-blue">{{ $product['name'] }}</a></h2>
                             <p class="mt-1 text-lg font-semibold text-reka-blue">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>

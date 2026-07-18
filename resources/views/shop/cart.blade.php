@@ -31,14 +31,14 @@
         <div class="grid gap-8 lg:grid-cols-[1.6fr_0.8fr]">
             <section class="space-y-4">
                 @forelse($items as $key => $item)
-                    <article class="flex flex-col gap-5 rounded-[28px] border border-reka-border bg-white p-5 shadow-[0_10px_30px_rgba(17,17,17,0.05)] sm:flex-row sm:items-center">
-                        <img src="{{ $item['image'] ?? '' }}" alt="{{ $item['name'] }}" class="h-32 w-full rounded-2xl object-cover sm:h-28 sm:w-28">
+                    <article class="flex flex-col gap-5 rounded-[28px] border border-reka-border bg-white p-5 shadow-[0_10px_30px_rgba(17,17,17,0.05)] sm:flex-row sm:items-center transition hover:-translate-y-0.5">
+                        <img src="{{ $item['image_url'] ?? '' }}" alt="{{ $item['name'] }}" class="h-32 w-full rounded-2xl object-cover sm:h-28 sm:w-28">
                         <div class="flex-1">
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                 <div>
                                     <h2 class="text-lg font-semibold">{{ $item['name'] }}</h2>
                                     <p class="mt-1 text-sm text-reka-text-muted">{{ $item['size'] ?? 'Standard' }} · Qty {{ $item['quantity'] }}</p>
-                                    <p class="mt-2 text-sm font-medium text-reka-blue">In stock</p>
+                                    <p class="mt-2 text-sm font-medium {{ $item['is_available'] ?? true ? 'text-reka-blue' : 'text-rose-600' }}">{{ $item['availability_label'] ?? 'Tersedia' }}</p>
                                 </div>
                                 <form action="{{ route('cart.remove', ['key' => $key]) }}" method="POST">
                                     @csrf
@@ -48,22 +48,19 @@
                             </div>
 
                             <div class="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                <form action="{{ route('cart.update', ['key' => $key]) }}" method="POST" class="inline-flex items-center rounded-full border border-reka-border bg-reka-surface p-1">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="w-12 bg-transparent px-2 py-1 text-center text-sm font-semibold outline-none">
-                                    <button class="h-9 w-9 rounded-full text-lg transition hover:bg-white" type="submit" aria-label="Update quantity">↺</button>
-                                </form>
+                                <div class="inline-flex items-center rounded-full border border-reka-border bg-reka-surface px-3 py-2 text-sm font-semibold text-reka-text-secondary">
+                                    1 unit
+                                </div>
                                 <div class="text-lg font-semibold text-reka-text">Rp {{ number_format(($item['price'] ?? 0) * ($item['quantity'] ?? 1), 0, ',', '.') }}</div>
                             </div>
                         </div>
                     </article>
                 @empty
-                    <div class="rounded-[28px] border border-dashed border-reka-border bg-white p-8 text-center text-reka-text-muted">Your cart is empty. Add a piece you love to get started.</div>
+                    <div class="empty-state">Your cart is empty. Add a piece you love to get started.</div>
                 @endforelse
             </section>
 
-            <aside class="rounded-[28px] border border-reka-border bg-white p-6 shadow-[0_10px_30px_rgba(17,17,17,0.05)]">
+            <aside class="surface-card p-6">
                 <div class="flex items-center justify-between">
                     <h2 class="text-xl font-semibold">Order Summary</h2>
                     <span class="rounded-full bg-reka-blue-light px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-reka-blue">Estimated</span>
@@ -89,10 +86,10 @@
                 </div>
 
                 <div class="mt-6 space-y-3">
-                    <a href="/category" class="flex items-center justify-center rounded-full border border-reka-border px-4 py-3 text-sm font-semibold text-reka-text transition hover:bg-reka-surface">
+                    <a href="{{ route('category') }}" class="flex items-center justify-center rounded-full border border-reka-border px-4 py-3 text-sm font-semibold text-reka-text transition hover:bg-reka-surface">
                         Continue Shopping
                     </a>
-                    <a href="/checkout" class="flex items-center justify-center rounded-full bg-reka-blue px-4 py-3 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">
+                    <a href="{{ route('checkout') }}" class="flex items-center justify-center rounded-full bg-reka-blue px-4 py-3 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">
                         Checkout
                     </a>
                 </div>

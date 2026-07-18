@@ -19,9 +19,11 @@
 
 <body class="font-sans antialiased bg-white text-reka-text selection:bg-reka-blue-light selection:text-reka-blue">
 
+    @php($featuredProducts = $featuredProducts ?? collect())
+
     <!-- ─── STICKY NAVIGATION BAR ─── -->
     <header id="navbar" class="sticky top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-reka-border">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between sm:px-6 lg:px-8">
             <!-- Left: Logo -->
             <a href="/"
                 class="text-2xl font-bold text-reka-blue tracking-widest uppercase flex items-center gap-1.5">
@@ -45,46 +47,57 @@
             <!-- Right: Search & Actions -->
             <div class="flex items-center gap-5">
                 <!-- Search Bar (Desktop) -->
-                <div class="hidden md:flex items-center relative w-72">
-                    <input type="text" placeholder="What are you looking for?"
+                <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center relative w-72">
+                    <input type="text" name="query" placeholder="What are you looking for?"
                         class="w-full pl-10 pr-4 py-2 bg-reka-surface border border-transparent focus:border-reka-blue rounded-full text-sm focus:outline-none transition-all placeholder:text-reka-text-muted">
                     <svg class="w-4 h-4 text-reka-text-secondary absolute left-3.5" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                </div>
+                </form>
 
                 <!-- Wishlist Icon -->
-                <a href="#" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
+                <a href="{{ Auth::check() ? route('wishlist') : route('login') }}" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
                     aria-label="Wishlist">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
-                    <span
-                        class="absolute -top-1 -right-1 bg-reka-error text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                    <span id="wishlist-count"
+                        class="absolute -top-1 -right-1 bg-reka-error text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{{ $wishlistCount ?? 0 }}</span>
                 </a>
 
                 <!-- Cart Icon -->
-                <a href="/cart" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
+                <a href="{{ Auth::check() ? route('cart') : route('login') }}" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
                     aria-label="Shopping Cart">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                     <span id="cart-count"
-                        class="absolute -top-1 -right-1 bg-reka-blue text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                        class="absolute -top-1 -right-1 bg-reka-blue text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{{ $cartCount ?? 0 }}</span>
                 </a>
 
                 <!-- Account Icon -->
-                <a href="#" class="p-1 text-reka-text hover:text-reka-blue transition-colors hidden md:block"
+                <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}" class="p-1 text-reka-text hover:text-reka-blue transition-colors hidden md:block"
                     aria-label="My Account">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </a>
+
+                @auth
+                    <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
+                        @csrf
+                        <button type="submit" class="p-1 text-reka-text hover:text-reka-blue transition-colors" aria-label="Log out">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m-3-3h8.25m0 0l-3-3m3 3l-3 3" />
+                            </svg>
+                        </button>
+                    </form>
+                @endauth
 
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-btn" class="lg:hidden p-1 text-reka-text focus:outline-none"
@@ -102,25 +115,25 @@
         <!-- Mobile Menu (Hidden by default) -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-reka-border">
             <div class="px-6 py-4 flex flex-col gap-4">
-                <a href="#categories" class="text-base font-semibold py-2 border-b border-reka-surface">Products</a>
+                <a href="{{ route('category') }}" class="text-base font-semibold py-2 border-b border-reka-surface">Products</a>
                 <a href="#featured" class="text-base font-semibold py-2 border-b border-reka-surface">Featured</a>
                 <a href="#promotions" class="text-base font-semibold py-2 border-b border-reka-surface">Offers</a>
                 <a href="#reviews" class="text-base font-semibold py-2 border-b border-reka-surface">Reviews</a>
-                <div class="pt-2 flex items-center relative">
-                    <input type="text" placeholder="What are you looking for?"
+                <form action="{{ route('search') }}" method="GET" class="pt-2 flex items-center relative">
+                    <input type="text" name="query" placeholder="What are you looking for?"
                         class="w-full pl-10 pr-4 py-2.5 bg-reka-surface border border-reka-border rounded-lg text-sm focus:outline-none focus:border-reka-blue">
                     <svg class="w-4 h-4 text-reka-text-secondary absolute left-3.5" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                </div>
+                </form>
             </div>
         </div>
     </header>
 
     <!-- ─── HERO BANNER ─── -->
-    <section class="relative w-full h-[600px] lg:h-[700px] overflow-hidden bg-reka-text flex items-center">
+    <section class="relative w-full h-[560px] overflow-hidden bg-reka-text flex items-center sm:h-[640px] lg:h-[720px]">
         <!-- Background Image -->
         <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Fashion editorial scene with layered outfits" class="absolute inset-0 w-full h-full object-cover">
@@ -128,7 +141,7 @@
         <div class="absolute inset-0 hero-gradient"></div>
 
         <!-- Content -->
-        <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 w-full sm:px-6 lg:px-8">
             <div data-animate class="max-w-xl text-white">
                 <span
                     class="inline-flex items-center gap-2 text-reka-yellow font-bold text-sm uppercase tracking-widest">
@@ -160,18 +173,18 @@
     </section>
 
     <!-- ─── POPULAR CATEGORIES ─── -->
-    <section id="categories" class="py-24 max-w-7xl mx-auto px-6">
+    <section id="categories" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-24">
         <div data-animate class="text-center mb-16">
             <div class="w-12 h-1 bg-reka-yellow mx-auto mb-4"></div>
             <h2 class="text-3xl lg:text-4xl font-bold tracking-tight">Shop by Category</h2>
             <p class="text-reka-text-muted mt-3">Find effortless pieces for every part of your wardrobe</p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-6">
             <!-- Category 1 -->
             <a href="{{ route('category', ['category' => 'Celana']) }}">
                 <div data-animate
-                    class="group relative rounded-2xl overflow-hidden cursor-pointer h-80 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
                     <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=397&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Women clothing collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -188,7 +201,7 @@
             <!-- Category 2 -->
             <a href="{{ route('category', ['category' => 'Hoodie']) }}">
                 <div data-animate
-                    class="group relative rounded-2xl overflow-hidden cursor-pointer h-80 shadow-sm hover:shadow-md transition-shadow duration-300 delay-100">
+                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-100 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
                     <img src="https://plus.unsplash.com/premium_photo-1673356302125-c77491af8735?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Outerwear collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -203,7 +216,7 @@
             <!-- Category 3 -->
             <a href="{{ route('category', ['category' => 'Jaket']) }}">
                 <div data-animate
-                    class="group relative rounded-2xl overflow-hidden cursor-pointer h-80 shadow-sm hover:shadow-md transition-shadow duration-300 delay-200">
+                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-200 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
                     <img src="https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?q=80&w=369&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Basics clothing collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -218,7 +231,7 @@
             <!-- Category 4 -->
             <a href="{{ route('category', ['category' => 'Kaos']) }}">
                 <div data-animate
-                    class="group relative rounded-2xl overflow-hidden cursor-pointer h-80 shadow-sm hover:shadow-md transition-shadow duration-300 delay-300">
+                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
                     <img src="https://plus.unsplash.com/premium_photo-1718913931807-4da5b5dd27fa?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Curated accessories collection"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -233,7 +246,7 @@
             <!-- Category 5 -->
             <a href="{{ route('category', ['category' => 'Kemeja']) }}">
                 <div data-animate
-                    class="group relative rounded-2xl overflow-hidden cursor-pointer h-80 shadow-sm hover:shadow-md transition-shadow duration-300 delay-400">
+                    class="group relative h-80 overflow-hidden rounded-[24px] border border-white/20 shadow-[0_10px_30px_rgba(17,17,17,0.08)] transition-all duration-300 delay-400 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.12)]">
                     <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=388&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Lifestyle apparel"
                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -248,8 +261,8 @@
     </section>
 
     <!-- ─── FEATURED PRODUCTS ─── -->
-    <section id="featured" class="py-24 bg-reka-surface border-y border-reka-border">
-        <div class="max-w-7xl mx-auto px-6">
+    <section id="featured" class="py-20 bg-reka-surface border-y border-reka-border lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div data-animate class="text-center mb-16">
                 <div class="w-12 h-1 bg-reka-yellow mx-auto mb-4"></div>
                 <h2 class="text-3xl lg:text-4xl font-bold tracking-tight">Featured Products</h2>
@@ -257,225 +270,51 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Product Card 1 -->
-                <div data-animate
-                    class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col h-full relative">
-                    <a href="/product/HO002" class="relative aspect-square overflow-hidden bg-gray-50 block">
-                        <img src="/images/products/Hoodie Adidas Putih Size M.jpg" alt="Hoodie Adidas Putih Size M"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </a>
-                    <button
-                        class="wishlist-btn absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all z-10"
-                        aria-label="Add to Wishlist">
-                        <svg class="w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-                    <div class="p-5 flex flex-col grow">
-                        <h3 class="font-bold text-reka-text text-lg hover:text-reka-blue transition-colors">
-                            <a href="/product/HO002">Hoodie Adidas Putih Size M</a>
-                        </h3>
-                        <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Hoodie preloved original</p>
+                @foreach($featuredProducts as $product)
+                    <div data-animate
+                        class="bg-white rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(17,17,17,0.05)] hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)] hover:-translate-y-1.5 transition-all duration-300 group flex flex-col h-full relative border border-reka-border/80">
+                        <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}" class="relative aspect-square overflow-hidden bg-gray-50 block">
+                            <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </a>
+                        <form action="{{ route('wishlist.add') }}" method="POST" class="absolute top-3 right-3 z-10">
+                            @csrf
+                            <input type="hidden" name="product_slug" value="{{ $product['slug'] }}">
+                            <button
+                                class="wishlist-btn w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all"
+                                aria-label="Add to Wishlist">
+                                <svg class="w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </button>
+                        </form>
+                        <div class="p-5 flex flex-col grow">
+                            <h3 class="font-bold text-reka-text text-lg hover:text-reka-blue transition-colors">
+                                <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}">{{ $product['name'] }}</a>
+                            </h3>
+                            <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">{{ $product['description'] }}</p>
 
-                        <!-- Rating -->
-                        <div class="flex items-center gap-1 mt-3">
-                            <div class="flex text-reka-yellow">
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current text-gray-300" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
+                            <div class="mt-3 flex items-center gap-2">
+                                @if(($product['is_available'] ?? false))
+                                    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Tersedia</span>
+                                @else
+                                    <span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-rose-700">Barang Habis</span>
+                                @endif
                             </div>
-                            <span class="text-xs text-reka-text-muted ml-1">4.7 (126)</span>
-                        </div>
 
-                        <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
-                            <span class="text-xl font-bold text-reka-text">Rp 160,000</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 2 -->
-                <div data-animate
-                    class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col h-full relative delay-100">
-                    <a href="/product/KE004" class="relative aspect-square overflow-hidden bg-gray-50 block">
-                        <img src="/images/products/Kemeja Muji Biru Size XL.jpg" alt="Kemeja Muji Biru Size XL"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </a>
-                    <button
-                        class="wishlist-btn absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all z-10"
-                        aria-label="Add to Wishlist">
-                        <svg class="w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-                    <div class="p-5 flex flex-col grow">
-                        <h3 class="font-bold text-reka-text text-lg hover:text-reka-blue transition-colors">
-                            <a href="/product/KE004">Kemeja Muji Biru</a>
-                        </h3>
-                        <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Kemeja preloved original</p>
-
-                        <!-- Rating -->
-                        <div class="flex items-center gap-1 mt-3">
-                            <div class="flex text-reka-yellow">
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current text-gray-300" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                            </div>
-                            <span class="text-xs text-reka-text-muted ml-1">4.4 (89)</span>
-                        </div>
-
-                        <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
-                            <span class="text-xl font-bold text-reka-text">Rp 280,000</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 3 -->
-                <div data-animate
-                    class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col h-full relative delay-200">
-                    <a href="/product/CE001" class="relative aspect-square overflow-hidden bg-gray-50 block">
-                        <img src="/images/products/Celana Levis Merah Size S.jpg" alt="Celana Levis Merah Size S"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </a>
-                    <button
-                        class="wishlist-btn absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all z-10"
-                        aria-label="Add to Wishlist">
-                        <svg class="w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-                    <div class="p-5 flex flex-col grow">
-                        <h3 class="font-bold text-reka-text text-lg hover:text-reka-blue transition-colors">
-                            <a href="/product/CE001">Celana Levis Merah</a>
-                        </h3>
-                        <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Celana preloved original</p>
-
-                        <!-- Rating -->
-                        <div class="flex items-center gap-1 mt-3">
-                            <div class="flex text-reka-yellow">
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                            </div>
-                            <span class="text-xs text-reka-text-muted ml-1">4.8 (234)</span>
-                        </div>
-
-                        <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
-                            <div>
-                               <span class="text-xl font-bold text-reka-text">Rp 300,000</span>
+                            <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
+                                <span class="text-xl font-bold text-reka-text">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
 
-                <!-- Product Card 4 -->
-                <div data-animate
-                    class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col h-full relative delay-300">
-                    <a href="/product/KA001" class="relative aspect-square overflow-hidden bg-gray-50 block">
-                        <img src="/images/products/Kaos Carhartt Abu Size S.jpg" alt="Kaos Carhartt Abu Size S"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </a>
-                    <button
-                        class="wishlist-btn absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all z-10"
-                        aria-label="Add to Wishlist">
-                        <svg class="w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-                    <div class="p-5 flex flex-col grow">
-                        <h3 class="font-bold text-reka-text text-lg hover:text-reka-blue transition-colors">
-                            <a href="/product/KA001">Kaos Carhartt Abu</a>
-                        </h3>
-                        <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">Kaos preloved original</p>
+                                
 
-                        <!-- Rating -->
-                        <div class="flex items-center gap-1 mt-3">
-                            <div class="flex text-reka-yellow">
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <svg class="w-4 h-4 fill-current text-gray-300" viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                            </div>
-                            <span class="text-xs text-reka-text-muted ml-1">4.8 (167)</span>
-                        </div>
 
-                        <div class="flex items-center justify-between mt-6 pt-3 border-t border-reka-border">
-                            <span class="text-xl font-bold text-reka-text">Rp 200,000</span>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -483,7 +322,7 @@
     </section>
 
     <!-- ─── PROMOTIONAL BANNER ─── -->
-    <section id="promotions" class="py-20 bg-reka-blue text-white overflow-hidden relative">
+    <section id="promotions" class="overflow-hidden bg-reka-blue py-20 text-white relative lg:py-24">
         <div
             class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none">
         </div>
@@ -491,7 +330,7 @@
             class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none">
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 gap-12 items-center sm:px-6 lg:px-8 lg:grid-cols-2 lg:gap-16">
             <!-- Left: Text -->
             <div data-animate>
                 <span
@@ -536,8 +375,8 @@
     </section>
 
     <!-- ─── CUSTOMER REVIEWS ─── -->
-    <section id="reviews" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
+    <section id="reviews" class="bg-white py-20 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div data-animate class="text-center mb-16">
                 <div class="w-12 h-1 bg-reka-yellow mx-auto mb-4"></div>
                 <h2 class="text-3xl lg:text-4xl font-bold tracking-tight">What Our Customers Say</h2>
@@ -718,7 +557,7 @@
                     Functional, beautiful, and sustainably made apparel designed to elevate everyday dressing.
                 </p>
                 <div class="flex items-center gap-4 mt-6">
-                    <a href="#"
+                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"
                         class="w-10 h-10 rounded-full bg-gray-800 hover:bg-reka-blue text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300"
                         aria-label="Facebook">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -726,7 +565,7 @@
                                 d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
                         </svg>
                     </a>
-                    <a href="#"
+                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"
                         class="w-10 h-10 rounded-full bg-gray-800 hover:bg-reka-blue text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300"
                         aria-label="Instagram">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -734,7 +573,7 @@
                                 d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                         </svg>
                     </a>
-                    <a href="#"
+                    <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"
                         class="w-10 h-10 rounded-full bg-gray-800 hover:bg-reka-blue text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300"
                         aria-label="Twitter">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -755,7 +594,7 @@
                     <li><a href="#categories" class="hover:text-white transition-colors">Basics & Layers</a></li>
                     <li><a href="#categories" class="hover:text-white transition-colors">Accessories</a></li>
                     <li><a href="#categories" class="hover:text-white transition-colors">Lifestyle Pieces</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">All Products</a></li>
+                    <li><a href="{{ route('category') }}" class="hover:text-white transition-colors">All Products</a></li>
                 </ul>
             </div>
 
@@ -763,13 +602,13 @@
             <div>
                 <h4 class="font-bold text-base mb-6 uppercase tracking-wider">Customer Support</h4>
                 <ul class="flex flex-col gap-3.5 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-white transition-colors">Track Order</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Delivery & Installation</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Returns & Refunds</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Product Guides & Assembly</a>
+                    <li><a href="{{ Auth::check() ? route('orders') : route('login') }}" class="hover:text-white transition-colors">Track Order</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Delivery & Installation</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Returns & Refunds</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Product Guides & Assembly</a>
                     </li>
-                    <li><a href="#" class="hover:text-white transition-colors">FAQs</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Store Locator</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">FAQs</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Store Locator</a></li>
                 </ul>
             </div>
 
@@ -777,12 +616,12 @@
             <div>
                 <h4 class="font-bold text-base mb-6 uppercase tracking-wider">REKA Indonesia</h4>
                 <ul class="flex flex-col gap-3.5 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Sustainability & Design</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Newsroom</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">REKA Family Member</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">About Us</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Careers</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Sustainability & Design</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Newsroom</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">REKA Family Member</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Contact Us</a></li>
                 </ul>
             </div>
         </div>
@@ -811,8 +650,8 @@
 
             <!-- Legal links -->
             <div class="flex gap-6 text-xs text-gray-500">
-                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="{{ route('support') }}" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="{{ route('support') }}" class="hover:text-white transition-colors">Terms of Service</a>
             </div>
         </div>
     </footer>

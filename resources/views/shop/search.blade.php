@@ -9,7 +9,7 @@
 <body class="min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
     <div class="min-h-screen bg-[linear-gradient(135deg,_#ffffff_0%,_#f7f6f2_100%)]">
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-            <div class="rounded-[30px] border border-reka-border bg-white p-6 shadow-[0_12px_35px_rgba(17,17,17,0.06)]">
+            <div class="surface-card p-6">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div class="flex-1">
                         <p class="text-sm font-semibold uppercase tracking-[0.25em] text-reka-blue">Find your fit</p>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="mt-8 grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
-                <aside class="rounded-[28px] border border-reka-border bg-white p-5 shadow-[0_10px_30px_rgba(17,17,17,0.05)] lg:sticky lg:top-6 lg:h-fit">
+                <aside class="section-card p-5 lg:sticky lg:top-6 lg:h-fit">
                     <h2 class="text-lg font-semibold">Filters</h2>
                     <div class="mt-5 space-y-5 text-sm">
                         <div>
@@ -57,7 +57,7 @@
                 <section>
                     <div class="mb-5 flex flex-col gap-3 rounded-[24px] border border-reka-border bg-white p-4 shadow-[0_10px_30px_rgba(17,17,17,0.05)] sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <p class="text-sm font-semibold text-reka-blue">24 products</p>
+                            <p class="text-sm font-semibold text-reka-blue">{{ count($products) }} products</p>
                             <p class="text-sm text-reka-text-muted">Browse functional pieces for every corner.</p>
                         </div>
                         <div class="flex items-center gap-3">
@@ -74,18 +74,25 @@
                     <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                         @forelse($products as $slug => $product)
                             <article class="group overflow-hidden rounded-[28px] border border-reka-border bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
-                                <a href="{{ route('product-detail', ['slug' => $slug]) }}"><img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="h-52 w-full object-cover transition duration-500 group-hover:scale-105"></a>
+                                <a href="{{ route('product-detail', ['slug' => $slug]) }}"><img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}" class="h-52 w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy"></a>
                                 <div class="p-5">
                                     <h3 class="text-lg font-semibold"><a href="{{ route('product-detail', ['slug' => $slug]) }}" class="hover:text-reka-blue">{{ $product['name'] }}</a></h3>
                                     <p class="mt-1 text-sm text-reka-text-muted">{{ $product['description'] }}</p>
                                     <div class="mt-3 flex items-center justify-between">
-                                        <p class="text-base font-semibold text-reka-blue">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
+                                        <div>
+                                            <p class="text-base font-semibold text-reka-blue">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
+                                            @if(($product['is_available'] ?? false))
+                                                <p class="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Tersedia</p>
+                                            @else
+                                                <p class="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-rose-600">Barang Habis</p>
+                                            @endif
+                                        </div>
                                         <span class="text-sm text-reka-text-muted">★ {{ $product['rating'] }}</span>
                                     </div>
                                 </div>
                             </article>
                         @empty
-                            <div class="col-span-full rounded-[24px] border border-dashed border-reka-border bg-white p-8 text-center text-reka-text-muted">No products matched your search. Try a different term.</div>
+                            <div class="col-span-full empty-state">No products matched your search. Try a different term.</div>
                         @endforelse
                     </div>
 

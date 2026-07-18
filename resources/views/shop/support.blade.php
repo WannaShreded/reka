@@ -6,7 +6,7 @@
     <title>REKA - Support</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
+<body class="page-shell min-h-screen bg-[#f7f6f2] text-reka-text antialiased">
     <div class="min-h-screen bg-[linear-gradient(135deg,_#ffffff_0%,_#f7f6f2_100%)]">
         <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="rounded-[32px] border border-reka-border bg-white p-8 shadow-[0_16px_40px_rgba(17,17,17,0.06)]">

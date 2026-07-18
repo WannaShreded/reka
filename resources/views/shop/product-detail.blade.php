@@ -26,11 +26,11 @@
             <span>Free delivery on orders over <span class="text-white font-semibold">Rp 2,000,000</span></span>
         </div>
         <div class="flex items-center gap-6">
-            <a href="#" class="hover:text-white transition-colors">Help & Support</a>
+            <a href="{{ route('support') }}" class="hover:text-white transition-colors">Help & Support</a>
             <span class="text-gray-600">|</span>
-            <a href="#" class="hover:text-white transition-colors">Store Locator</a>
+            <a href="{{ route('support') }}" class="hover:text-white transition-colors">Store Locator</a>
             <span class="text-gray-600">|</span>
-            <a href="#" class="hover:text-white transition-colors flex items-center gap-1">
+            <a href="{{ route('support') }}" class="hover:text-white transition-colors flex items-center gap-1">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h2a2.5 2.5 0 002.5-2.5V10a2 2 0 00-2-2h-1a2 2 0 00-2-2v-1a2 2 0 00-2-2 2.5 2.5 0 00-2.5 2.5v.5A2.5 2.5 0 016 6.07M12 21a9 9 0 110-18 9 9 0 010 18z" />
@@ -67,37 +67,37 @@
 
             <!-- Right: Actions -->
             <div class="flex items-center gap-5">
-                <div class="hidden md:flex items-center relative w-72">
-                    <input type="text" placeholder="What are you looking for?"
+                <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center relative w-72">
+                    <input type="text" name="query" placeholder="What are you looking for?"
                         class="w-full pl-10 pr-4 py-2 bg-reka-surface border border-transparent focus:border-reka-blue rounded-full text-sm focus:outline-none transition-all placeholder:text-reka-text-muted">
                     <svg class="w-4 h-4 text-reka-text-secondary absolute left-3.5" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                </div>
+                </form>
 
-                <a href="#" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
+                <a href="{{ Auth::check() ? route('wishlist') : route('login') }}" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
                     aria-label="Wishlist">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
-                    <span
-                        class="absolute -top-1 -right-1 bg-reka-error text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                    <span id="wishlist-count"
+                        class="absolute -top-1 -right-1 bg-reka-error text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{{ $wishlistCount ?? 0 }}</span>
                 </a>
 
-                <a href="#" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
+                <a href="{{ Auth::check() ? route('cart') : route('login') }}" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
                     aria-label="Shopping Cart">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                     <span id="cart-count"
-                        class="absolute -top-1 -right-1 bg-reka-blue text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                        class="absolute -top-1 -right-1 bg-reka-blue text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{{ $cartCount ?? 0 }}</span>
                 </a>
 
-                <a href="#" class="p-1 text-reka-text hover:text-reka-blue transition-colors hidden md:block"
+                <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}" class="p-1 text-reka-text hover:text-reka-blue transition-colors hidden md:block"
                     aria-label="My Account">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -109,8 +109,8 @@
     </header>
 
     <!-- ─── BREADCRUMBS ─── -->
-    <div class="bg-reka-surface border-b border-reka-border py-4">
-        <div class="max-w-7xl mx-auto px-6 text-sm text-reka-text-secondary flex items-center gap-2.5">
+    <div class="border-b border-reka-border bg-reka-surface/80 py-4">
+        <div class="mx-auto flex max-w-7xl items-center gap-2.5 px-4 text-sm text-reka-text-secondary sm:px-6 lg:px-8">
             <a href="/" class="hover:text-reka-blue transition-colors">Home</a>
             <svg class="w-3.5 h-3.5 text-reka-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -124,15 +124,15 @@
     </div>
 
     <!-- ─── PRODUCT PRESENTATION (Main Detail) ─── -->
-    <main class="page-shell-inner max-w-7xl mx-auto px-6 py-12">
+    <main class="page-shell-inner max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
 
             <!-- LEFT COLUMN: Image & Gallery (7 cols) -->
             <div class="lg:col-span-7 flex flex-col gap-6">
                 <!-- Large Product Image -->
                 <div
-                    class="panel-card overflow-hidden aspect-square flex items-center justify-center p-8 group relative">
-                    <img id="main-product-image" src="{{ asset('images/' . $product['image']) }}"
+                    class="surface-card relative flex aspect-square items-center justify-center overflow-hidden p-8 group">
+                    <img id="main-product-image" src="{{ $product['image_url'] }}"
                         alt="{{ $product['name'] }}"
                         class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
 
@@ -149,11 +149,11 @@
 
                 <!-- Thumbnail Gallery -->
                 <div class="grid grid-cols-4 gap-4">
-                    @foreach (json_decode($product['images'], true) as $index => $image)
-                        <button onclick="changeImage('{{ asset('images/' . $image) }}', this)"
+                    @foreach ($product['image_urls'] as $index => $imageUrl)
+                        <button onclick="changeImage('{{ $imageUrl }}', this)"
                             class="thumbnail-btn bg-reka-surface rounded-xl overflow-hidden aspect-square border-2 {{ $index === 0 ? 'border-reka-blue' : 'border-transparent hover:border-reka-border' }} p-2 focus:outline-none transition-all">
 
-                            <img src="{{ asset('images/' . $image) }}" alt="{{ $product['name'] }} thumbnail"
+                            <img src="{{ $imageUrl }}" alt="{{ $product['name'] }} thumbnail"
                                 class="w-full h-full object-cover">
                         </button>
                     @endforeach
@@ -164,19 +164,26 @@
             <div class="lg:col-span-5 flex flex-col">
                 <!-- Eyebrow & Stock Status -->
                 <div class="flex items-center justify-between">
-                    <span class="text-xs uppercase tracking-widest text-reka-blue font-bold">Signature Apparel</span>
+                    <span class="text-xs font-semibold uppercase tracking-[0.25em] text-reka-blue">Signature Apparel</span>
                 </div>
 
                 <!-- Product Name -->
-                <h1 class="text-4xl font-extrabold text-reka-text mt-4">{{ $product['name'] }}</h1>
-                <p class="text-lg text-reka-text-secondary mt-1">{{ $product['description'] }}</p>
+                <h1 class="mt-4 text-3xl font-semibold tracking-tight text-reka-text sm:text-4xl">{{ $product['name'] }}</h1>
+                <p class="mt-2 text-lg leading-8 text-reka-text-secondary">{{ $product['description'] }}</p>
 
                 <!-- Price -->
                 <div class="mt-6 border-b border-reka-border pb-6">
-                    <span class="text-3xl font-extrabold text-reka-text">Rp
+                    <span class="text-3xl font-semibold text-reka-text">Rp
                         {{ number_format($product['price'], 0, ',', '.') }}</span>
                     <p class="text-xs text-reka-text-muted mt-1">Includes local tax. Standard tailoring & delivery
                         handled at checkout.</p>
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                        @if(($product['is_available'] ?? false))
+                            <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Tersedia</span>
+                        @else
+                            <span class="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-sm font-semibold text-rose-700">Barang Habis</span>
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Description -->
@@ -198,34 +205,32 @@
                             {{ $product['sizes'][0] }}
                         </span>
                     </div>
-                    <div class="flex gap-4">
-                        <div
-                            class="flex items-center border border-reka-border rounded-lg bg-white overflow-hidden shadow-sm shrink-0">
-                            <button type="button" onclick="updateQty(-1)"
-                                class="px-3.5 py-3 hover:bg-reka-surface active:bg-gray-100 font-bold transition-colors focus:outline-none"
-                                aria-label="Decrease quantity">−</button>
-                            <span id="product-qty"
-                                class="px-5 py-3 font-semibold text-sm min-w-[50px] text-center select-none">1</span>
-                            <button type="button" onclick="updateQty(1)"
-                                class="px-3.5 py-3 hover:bg-reka-surface active:bg-gray-100 font-bold transition-colors focus:outline-none"
-                                aria-label="Increase quantity">+</button>
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <div class="inline-flex items-center rounded-full border border-reka-border bg-reka-surface px-4 py-3 text-sm font-semibold text-reka-text-secondary">
+                            1 unit
                         </div>
                         <input type="hidden" name="quantity" id="quantity-input" value="1">
-                        <button type="submit"
-                            class="add-to-cart-btn flex-grow inline-flex items-center justify-center gap-2 btn-primary px-6 py-4 rounded-lg shadow-md hover:shadow-lg focus:outline-none">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            Add to Cart
-                        </button>
+                        @if(($product['is_available'] ?? false))
+                            <button type="submit"
+                                class="add-to-cart-btn flex-grow inline-flex items-center justify-center gap-2 btn-primary px-6 py-4 rounded-full shadow-sm hover:shadow-md focus:outline-none">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                Add to Cart
+                            </button>
+                        @else
+                            <span class="flex-grow inline-flex items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-6 py-4 text-sm font-semibold text-rose-700">
+                                Barang Habis
+                            </span>
+                        @endif
                     </div>
                 </form>
                 <form action="{{ route('wishlist.add') }}" method="POST" class="mt-3">
                     @csrf
                     <input type="hidden" name="product_slug" value="{{ $product['slug'] }}">
                     <button type="submit"
-                        class="wishlist-btn border border-reka-border w-14 h-14 rounded-lg flex items-center justify-center bg-white hover:bg-reka-surface transition-all shrink-0 shadow-sm hover:scale-105 active:scale-95"
+                        class="wishlist-btn border border-reka-border w-14 h-14 rounded-full flex items-center justify-center bg-white hover:bg-reka-surface transition-all shrink-0 shadow-sm hover:scale-105 active:scale-95"
                         aria-label="Add to Wishlist">
                         <svg class="w-6 h-6 text-gray-500 pointer-events-none" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -235,10 +240,16 @@
                     </button>
                 </form>
 
-                <a href="{{ route('checkout') }}"
-                    class="mt-3.5 block w-full bg-reka-yellow text-reka-text font-bold px-6 py-4 rounded-full hover:bg-reka-yellow-dark transition-all shadow-sm focus:outline-none text-center">
-                    Buy It Now
-                </a>
+                @if(($product['is_available'] ?? false))
+                    <a href="{{ route('checkout') }}"
+                        class="mt-3.5 block w-full bg-reka-yellow text-reka-text font-bold px-6 py-4 rounded-full hover:bg-reka-yellow-dark transition-all shadow-sm hover:shadow-md focus:outline-none text-center">
+                        Buy It Now
+                    </a>
+                @else
+                    <span class="mt-3.5 block w-full cursor-not-allowed rounded-full border border-rose-200 bg-rose-50 px-6 py-4 text-center text-sm font-semibold text-rose-700">
+                        Barang Habis
+                    </span>
+                @endif
 
                 <!-- Small Trust indicators -->
                 <div
@@ -378,7 +389,7 @@
                     Functional, beautiful, and sustainably made apparel designed to elevate everyday dressing.
                 </p>
                 <div class="flex items-center gap-4 mt-6">
-                    <a href="#"
+                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"
                         class="w-10 h-10 rounded-full bg-gray-800 hover:bg-reka-blue text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300"
                         aria-label="Facebook">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -386,7 +397,7 @@
                                 d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
                         </svg>
                     </a>
-                    <a href="#"
+                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"
                         class="w-10 h-10 rounded-full bg-gray-800 hover:bg-reka-blue text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300"
                         aria-label="Instagram">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -394,7 +405,7 @@
                                 d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                         </svg>
                     </a>
-                    <a href="#"
+                    <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"
                         class="w-10 h-10 rounded-full bg-gray-800 hover:bg-reka-blue text-gray-400 hover:text-white flex items-center justify-center transition-all duration-300"
                         aria-label="Twitter">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -415,7 +426,7 @@
                     <li><a href="/\#categories" class="hover:text-white transition-colors">Basics</a></li>
                     <li><a href="/\#categories" class="hover:text-white transition-colors">Accessories</a></li>
                     <li><a href="/\#categories" class="hover:text-white transition-colors">Lifestyle Pieces</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">All Products</a></li>
+                    <li><a href="{{ route('category') }}" class="hover:text-white transition-colors">All Products</a></li>
                 </ul>
             </div>
 
@@ -423,13 +434,13 @@
             <div>
                 <h4 class="font-bold text-base mb-6 uppercase tracking-wider">Customer Support</h4>
                 <ul class="flex flex-col gap-3.5 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-white transition-colors">Track Order</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Delivery & Installation</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Returns & Refunds</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Product Guides & Assembly</a>
+                    <li><a href="{{ Auth::check() ? route('orders') : route('login') }}" class="hover:text-white transition-colors">Track Order</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Delivery & Installation</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Returns & Refunds</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Product Guides & Assembly</a>
                     </li>
-                    <li><a href="#" class="hover:text-white transition-colors">FAQs</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Store Locator</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">FAQs</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Store Locator</a></li>
                 </ul>
             </div>
 
@@ -437,12 +448,12 @@
             <div>
                 <h4 class="font-bold text-base mb-6 uppercase tracking-wider">REKA Indonesia</h4>
                 <ul class="flex flex-col gap-3.5 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Sustainability & Design</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Newsroom</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">REKA Family Member</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">About Us</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Careers</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Sustainability & Design</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Newsroom</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">REKA Family Member</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Contact Us</a></li>
                 </ul>
             </div>
         </div>
@@ -471,14 +482,13 @@
 
             <!-- Legal links -->
             <div class="flex gap-6 text-xs text-gray-500">
-                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="{{ route('support') }}" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="{{ route('support') }}" class="hover:text-white transition-colors">Terms of Service</a>
             </div>
         </div>
     </footer>
 
     <!-- Interactive Scripts for Details Page -->
-    <!-- document.getElementById('quantity-input').value = current; -->
     <script>
         // Gallery switcher
         function changeImage(src, btn) {
@@ -491,19 +501,6 @@
             // Add active border to this thumb
             btn.classList.remove('border-transparent');
             btn.classList.add('border-reka-blue');
-        }
-
-        // Qty counter
-        function updateQty(delta) {
-            const label = document.getElementById('product-qty');
-            const quantityInput = document.getElementById('quantity-input');
-            let current = parseInt(label.textContent, 10) || 1;
-            current += delta;
-            if (current < 1) current = 1;
-            label.textContent = current;
-            if (quantityInput) {
-                document.getElementById('quantity-input').value = current;
-            }
         }
     </script>
 </body>

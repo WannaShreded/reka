@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -16,6 +17,15 @@ class Order extends Model
         'address',
         'shipping_method',
         'payment_method',
+        'payment_status',
+        'midtrans_transaction_id',
+        'midtrans_order_id',
+        'midtrans_payment_type',
+        'midtrans_fraud_status',
+        'snap_token',
+        'snap_redirect_url',
+        'paid_at',
+        'payment_expired_at',
         'items',
         'subtotal',
         'shipping_cost',
@@ -24,5 +34,12 @@ class Order extends Model
 
     protected $casts = [
         'items' => 'array',
+        'paid_at' => 'datetime',
+        'payment_expired_at' => 'datetime',
     ];
+
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
