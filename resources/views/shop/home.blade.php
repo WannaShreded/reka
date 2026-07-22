@@ -42,6 +42,8 @@
                     class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">Offers</a>
                 <a href="#reviews"
                     class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">Review</a>
+                <a href="/about"
+                    class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">About Us</a>
             </nav>
 
             <!-- Right: Search & Actions -->
@@ -58,8 +60,8 @@
                 </form>
 
                 <!-- Wishlist Icon -->
-                <a href="{{ Auth::check() ? route('wishlist') : route('login') }}" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
-                    aria-label="Wishlist">
+                <a href="{{ Auth::check() ? route('wishlist') : route('login') }}"
+                    class="relative p-1 text-reka-text hover:text-reka-blue transition-colors" aria-label="Wishlist">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -69,7 +71,8 @@
                 </a>
 
                 <!-- Cart Icon -->
-                <a href="{{ Auth::check() ? route('cart') : route('login') }}" class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
+                <a href="{{ Auth::check() ? route('cart') : route('login') }}"
+                    class="relative p-1 text-reka-text hover:text-reka-blue transition-colors"
                     aria-label="Shopping Cart">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -80,7 +83,8 @@
                 </a>
 
                 <!-- Account Icon -->
-                <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}" class="p-1 text-reka-text hover:text-reka-blue transition-colors hidden md:block"
+                <a href="{{ Auth::check() ? route('profile.edit') : route('login') }}"
+                    class="p-1 text-reka-text hover:text-reka-blue transition-colors hidden md:block"
                     aria-label="My Account">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,9 +95,11 @@
                 @auth
                     <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
                         @csrf
-                        <button type="submit" class="p-1 text-reka-text hover:text-reka-blue transition-colors" aria-label="Log out">
+                        <button type="submit" class="p-1 text-reka-text hover:text-reka-blue transition-colors"
+                            aria-label="Log out">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m-3-3h8.25m0 0l-3-3m3 3l-3 3" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m-3-3h8.25m0 0l-3-3m3 3l-3 3" />
                             </svg>
                         </button>
                     </form>
@@ -105,8 +111,8 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path class="menu-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
-                        <path class="menu-close hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+                        <path class="menu-close hidden" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -115,7 +121,8 @@
         <!-- Mobile Menu (Hidden by default) -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-reka-border">
             <div class="px-6 py-4 flex flex-col gap-4">
-                <a href="{{ route('category') }}" class="text-base font-semibold py-2 border-b border-reka-surface">Products</a>
+                <a href="{{ route('category') }}"
+                    class="text-base font-semibold py-2 border-b border-reka-surface">Products</a>
                 <a href="#featured" class="text-base font-semibold py-2 border-b border-reka-surface">Featured</a>
                 <a href="#promotions" class="text-base font-semibold py-2 border-b border-reka-surface">Offers</a>
                 <a href="#reviews" class="text-base font-semibold py-2 border-b border-reka-surface">Reviews</a>
@@ -133,7 +140,8 @@
     </header>
 
     <!-- ─── HERO BANNER ─── -->
-    <section class="relative flex h-[560px] w-full items-center overflow-hidden bg-reka-text sm:h-[640px] lg:h-[760px]">
+    <section
+        class="relative flex h-[560px] w-full items-center overflow-hidden bg-reka-text sm:h-[640px] lg:h-[760px]">
         <!-- Background Image -->
         <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Fashion editorial scene with layered outfits" class="absolute inset-0 w-full h-full object-cover">
@@ -143,8 +151,7 @@
         <!-- Content -->
         <div class="relative z-10 max-w-7xl mx-auto px-4 w-full sm:px-6 lg:px-8">
             <div data-animate class="max-w-xl text-white">
-                <span
-                    class="glass-pill inline-flex items-center gap-2">
+                <span class="glass-pill inline-flex items-center gap-2">
                     <span class="h-[2px] w-8 bg-reka-yellow"></span>
                     New Collection 2026
                 </span>
@@ -155,8 +162,7 @@
                     Modern apparel designed for everyday life. Effortless, sustainable, and built to move with you.
                 </p>
                 <div class="mt-10 flex flex-wrap gap-4">
-                    <a href="/category"
-                        class="btn-primary inline-flex items-center gap-2 px-8 py-4 text-base">
+                    <a href="/category" class="btn-primary inline-flex items-center gap-2 px-8 py-4 text-base">
                         Shop Now
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -193,7 +199,7 @@
 
                     <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
                         <h3 class="font-bold text-lg">Pants</h3>
-                        <p class="text-white/70 text-xs mt-1">5 Items</p>
+                        <p class="text-white/70 text-xs mt-1">{{ \App\Models\Product::where('category', 'Celana')->count() }} Items</p>
                     </div>
                 </div>
             </a>
@@ -208,7 +214,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
                         <h3 class="font-bold text-lg">Hoodie</h3>
-                        <p class="text-white/70 text-xs mt-1">5 Items</p>
+                        <p class="text-white/70 text-xs mt-1">{{ \App\Models\Product::where('category', 'Hoodie')->count() }} Items</p>
                     </div>
                 </div>
             </a>
@@ -223,7 +229,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
                         <h3 class="font-bold text-lg">Jacket</h3>
-                        <p class="text-white/70 text-xs mt-1">5 Items</p>
+                        <p class="text-white/70 text-xs mt-1">{{ \App\Models\Product::where('category', 'Jaket')->count() }} Items</p>
                     </div>
                 </div>
             </a>
@@ -238,7 +244,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
                         <h3 class="font-bold text-lg">T-Shirt</h3>
-                        <p class="text-white/70 text-xs mt-1">5 Items</p>
+                        <p class="text-white/70 text-xs mt-1">{{ \App\Models\Product::where('category', 'Kaos')->count() }} Items</p>
                     </div>
                 </div>
             </a>
@@ -253,7 +259,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
                         <h3 class="font-bold text-lg">Shirt</h3>
-                        <p class="text-white/70 text-xs mt-1">5 Items</p>
+                        <p class="text-white/70 text-xs mt-1">{{ \App\Models\Product::where('category', 'Kemeja')->count() }} Items</p>
                     </div>
                 </div>
             </a>
@@ -261,7 +267,8 @@
     </section>
 
     <!-- ─── FEATURED PRODUCTS ─── -->
-    <section id="featured" class="border-y border-[color:rgba(231,226,216,0.8)] bg-[color:rgba(247,245,239,0.8)] py-20 lg:py-24">
+    <section id="featured"
+        class="border-y border-[color:rgba(231,226,216,0.8)] bg-[color:rgba(247,245,239,0.8)] py-20 lg:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div data-animate class="text-center mb-16">
                 <div class="w-12 h-1 bg-reka-yellow mx-auto mb-4"></div>
@@ -270,21 +277,22 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                @foreach($featuredProducts as $product)
-                    <div data-animate
-                        class="product-card group relative flex h-full flex-col">
-                        <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}" class="relative block aspect-square overflow-hidden bg-[#f7f4ed]">
+                @foreach ($featuredProducts as $product)
+                    <div data-animate class="product-card group relative flex h-full flex-col">
+                        <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}"
+                            class="relative block aspect-square overflow-hidden bg-[#f7f4ed]">
                             <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         </a>
-                        <form action="{{ route('wishlist.add') }}" method="POST" class="absolute top-3 right-3 z-10">
+                        <form action="{{ route('wishlist.add') }}" method="POST"
+                            class="absolute top-3 right-3 z-10">
                             @csrf
                             <input type="hidden" name="product_slug" value="{{ $product['slug'] }}">
                             <button
                                 class="wishlist-btn w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white transition-all"
                                 aria-label="Add to Wishlist">
-                                <svg class="w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 text-gray-400 pointer-events-none" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>
@@ -292,33 +300,39 @@
                         </form>
                         <div class="p-5 flex flex-col grow">
                             <h3 class="font-bold text-reka-text text-lg hover:text-reka-blue transition-colors">
-                                <a href="{{ route('product-detail', ['slug' => $product['slug']]) }}">{{ $product['name'] }}</a>
+                                <a
+                                    href="{{ route('product-detail', ['slug' => $product['slug']]) }}">{{ $product['name'] }}</a>
                             </h3>
-                            <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">{{ $product['description'] }}</p>
+                            <p class="text-sm text-reka-text-muted mt-1 line-clamp-2">{{ $product['description'] }}
+                            </p>
 
                             <div class="mt-3 flex items-center gap-2">
-                                @if(($product['is_available'] ?? false))
-                                    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Tersedia</span>
+                                @if ($product['is_available'] ?? false)
+                                    <span
+                                        class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Tersedia</span>
                                 @else
-                                    <span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-rose-700">Barang Habis</span>
+                                    <span
+                                        class="rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-rose-700">Barang
+                                        Habis</span>
                                 @endif
                             </div>
 
                             <div class="mt-6 flex items-center justify-between border-t border-reka-border pt-3">
-                                <span class="text-lg font-semibold text-reka-text">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
+                                <span class="text-lg font-semibold text-reka-text">Rp
+                                    {{ number_format($product['price'], 0, ',', '.') }}</span>
                                 <span class="text-sm font-medium text-reka-blue">View</span>
                             </div>
                         </div>
                     </div>
                 @endforeach
 
-                                
 
 
 
-                    </div>
-                </div>
+
             </div>
+        </div>
+        </div>
         </div>
     </section>
 
@@ -331,7 +345,8 @@
             class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none">
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 gap-12 items-center sm:px-6 lg:px-8 lg:grid-cols-2 lg:gap-16">
+        <div
+            class="max-w-7xl mx-auto px-4 grid grid-cols-1 gap-12 items-center sm:px-6 lg:px-8 lg:grid-cols-2 lg:gap-16">
             <!-- Left: Text -->
             <div data-animate>
                 <span
@@ -357,11 +372,11 @@
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-white/20 text-center lg:text-left">
                     <div>
-                        <span data-count="25" class="text-3xl font-extrabold text-white block">0</span>
+                        <span data-count="25" class="text-3xl font-extrabold text-white block">25</span>
                         <span class="text-white/60 text-xs mt-1 block uppercase font-medium">Products</span>
                     </div>
                     <div>
-                        <span data-count="365" class="text-3xl font-extrabold text-white block">0</span>
+                        <span data-count="365" class="text-3xl font-extrabold text-white block">365</span>
                         <span class="text-white/60 text-xs mt-1 block uppercase font-medium">Day Returns</span>
                     </div>
                 </div>
@@ -388,7 +403,8 @@
                 <!-- Review 1 -->
                 <div data-animate
                     class="bg-white rounded-2xl p-8 border border-reka-border hover:shadow-lg transition-shadow duration-300">
-                    <span class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
+                    <span
+                        class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
                     <p class="text-reka-text-secondary italic leading-relaxed mt-2">
                         This knit collection completely refreshed my weekend wardrobe. The fabric feels premium, it's
                         soft enough for all-day wear, and the fit is perfect for every relaxed look.
@@ -428,7 +444,8 @@
                 <!-- Review 2 -->
                 <div data-animate
                     class="bg-white rounded-2xl p-8 border border-reka-border hover:shadow-lg transition-shadow duration-300 delay-100">
-                    <span class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
+                    <span
+                        class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
                     <p class="text-reka-text-secondary italic leading-relaxed mt-2">
                         Outstanding service. The classic sweater is incredibly durable and keeps its shape after every
                         wash. It matches my minimal aesthetic perfectly.
@@ -468,7 +485,8 @@
                 <!-- Review 3 -->
                 <div data-animate
                     class="bg-white rounded-2xl p-8 border border-reka-border hover:shadow-lg transition-shadow duration-300 delay-200">
-                    <span class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
+                    <span
+                        class="text-6xl text-[color:rgba(29,79,114,0.15)] font-serif leading-none select-none">“</span>
                     <p class="text-reka-text-secondary italic leading-relaxed mt-2">
                         The collection helped me refresh my entire wardrobe. Quality and fit are exceptional, plus the
                         styling recommendations made everything effortless.
@@ -595,7 +613,8 @@
                     <li><a href="#categories" class="hover:text-white transition-colors">Basics & Layers</a></li>
                     <li><a href="#categories" class="hover:text-white transition-colors">Accessories</a></li>
                     <li><a href="#categories" class="hover:text-white transition-colors">Lifestyle Pieces</a></li>
-                    <li><a href="{{ route('category') }}" class="hover:text-white transition-colors">All Products</a></li>
+                    <li><a href="{{ route('category') }}" class="hover:text-white transition-colors">All Products</a>
+                    </li>
                 </ul>
             </div>
 
@@ -603,13 +622,18 @@
             <div>
                 <h4 class="font-bold text-base mb-6 uppercase tracking-wider">Customer Support</h4>
                 <ul class="flex flex-col gap-3.5 text-sm text-gray-400">
-                    <li><a href="{{ Auth::check() ? route('orders') : route('login') }}" class="hover:text-white transition-colors">Track Order</a></li>
-                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Delivery & Installation</a></li>
-                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Returns & Refunds</a></li>
-                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Product Guides & Assembly</a>
+                    <li><a href="{{ Auth::check() ? route('orders') : route('login') }}"
+                            class="hover:text-white transition-colors">Track Order</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Delivery &
+                            Installation</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Returns &
+                            Refunds</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Product Guides &
+                            Assembly</a>
                     </li>
                     <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">FAQs</a></li>
-                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Store Locator</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Store Locator</a>
+                    </li>
                 </ul>
             </div>
 
@@ -619,10 +643,13 @@
                 <ul class="flex flex-col gap-3.5 text-sm text-gray-400">
                     <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">About Us</a></li>
                     <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Careers</a></li>
-                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Sustainability & Design</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Sustainability &
+                            Design</a></li>
                     <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Newsroom</a></li>
-                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">REKA Family Member</a></li>
-                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Contact Us</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">REKA Family
+                            Member</a></li>
+                    <li><a href="{{ route('support') }}" class="hover:text-white transition-colors">Contact Us</a>
+                    </li>
                 </ul>
             </div>
         </div>

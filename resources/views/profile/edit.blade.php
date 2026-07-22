@@ -13,6 +13,12 @@
                 <p class="text-sm font-semibold uppercase tracking-[0.25em] text-reka-blue">Account settings</p>
                 <h1 class="mt-2 text-3xl font-semibold tracking-tight">My Profile</h1>
                 <p class="mt-2 text-sm text-reka-text-muted">Save your contact and default delivery information for faster checkout.</p>
+                <a href="{{ route('orders') }}" class="mt-4 inline-flex items-center gap-2 rounded-full bg-reka-blue px-5 py-3 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    My Orders
+                </a>
             </div>
             <a href="{{ route('dashboard') }}" class="rounded-full border border-reka-border px-5 py-3 text-sm font-semibold text-reka-text-secondary transition hover:bg-reka-surface">Back to shop</a>
         </div>

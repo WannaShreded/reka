@@ -71,7 +71,7 @@ class MidtransService
                 $updates['payment_expired_at'] = now();
             }
 
-            $this->syncOrderStock($order, $paymentStatus);
+            $this->syncProductStatus($order, $paymentStatus);
 
             $order->update($updates);
 
@@ -79,9 +79,9 @@ class MidtransService
         });
     }
 
-    private function syncOrderStock(Order $order, string $paymentStatus): void
+    private function syncProductStatus(Order $order, string $paymentStatus): void
     {
-        if (! in_array($paymentStatus, ['failed', 'expired'], true)) {
+        if (! in_array($paymentStatus, ['failed', 'expired', 'paid'], true)) {
             return;
         }
 
@@ -98,7 +98,17 @@ class MidtransService
                 continue;
             }
 
-            $product->increment('stock');
+            if (in_array($paymentStatus, ['failed', 'expired'], true)) {
+                if ($product->status === 'reserved' || $product->status === 'sold') {
+                    $product->update([
+                        'status' => 'available',
+                        'stock' => 1,
+                    ]);
+                }
+            } elseif ($paymentStatus === 'paid') {
+                $product->decrement('stock', $item->quantity);
+                $product->update(['status' => 'sold']);
+            }
         }
     }
 
@@ -151,8 +161,8 @@ class MidtransService
         return match ($transactionStatus) {
             'capture' => $fraudStatus === 'challenge'
                 ? ['pending', 'pending_payment']
-                : ['paid', 'paid'],
-            'settlement' => ['paid', 'paid'],
+                : ['paid', 'processing'],
+            'settlement' => ['paid', 'processing'],
             'pending' => ['pending', 'pending_payment'],
             'deny', 'cancel', 'failure' => ['failed', 'payment_failed'],
             'expire' => ['expired', 'expired'],

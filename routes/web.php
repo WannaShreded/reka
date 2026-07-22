@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\MidtransPaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -18,8 +19,11 @@ Route::get('/category', [ShopController::class, 'category'])->name('category');
 Route::get('/product/{slug}', [ShopController::class, 'productDetail'])->name('product-detail');
 Route::get('/search', [ShopController::class, 'search'])->name('search');
 Route::get('/support', [ShopController::class, 'support'])->name('support');
+Route::get('/about', [ShopController::class, 'about'])->name('about');
+
 
 Route::post('/cart/add', [ShopController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/buy-now', [ShopController::class, 'buyNow'])->name('buy.now');
 Route::get('/cart/count', [ShopController::class, 'cartCount'])->name('cart.count');
 Route::get('/wishlist/count', [ShopController::class, 'wishlistCount'])->name('wishlist.count');
 
@@ -39,7 +43,26 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin-dashboard', [ShopController::class, 'adminDashboard'])->name('admin-dashboard');
+    // Backward-compat redirect
+    Route::get('/admin-dashboard', fn () => redirect()->route('admin.dashboard'))->name('admin-dashboard');
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+        // Products
+        Route::get('/products',                  [AdminController::class, 'products'])->name('products.index');
+        Route::get('/products/create',           [AdminController::class, 'createProduct'])->name('products.create');
+        Route::post('/products',                 [AdminController::class, 'storeProduct'])->name('products.store');
+        Route::get('/products/{product}',        [AdminController::class, 'showProduct'])->name('products.show');
+        Route::get('/products/{product}/edit',   [AdminController::class, 'editProduct'])->name('products.edit');
+        Route::put('/products/{product}',        [AdminController::class, 'updateProduct'])->name('products.update');
+        Route::delete('/products/{product}',     [AdminController::class, 'deleteProduct'])->name('products.destroy');
+
+        // Orders
+        Route::get('/orders',                         [AdminController::class, 'orders'])->name('orders.index');
+        Route::get('/orders/{order}',                 [AdminController::class, 'showOrder'])->name('orders.show');
+        Route::patch('/orders/{order}/status',        [AdminController::class, 'updateOrderStatus'])->name('orders.status');
+    });
 });
 
 Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');

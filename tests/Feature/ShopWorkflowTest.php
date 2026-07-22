@@ -102,7 +102,9 @@ class ShopWorkflowTest extends TestCase
 
         $response = $this->actingAs($user)->get('/admin-dashboard');
 
-        $response->assertOk();
+        $response->assertRedirect('/admin/dashboard');
+
+        $this->actingAs($user)->get('/admin/dashboard')->assertOk();
     }
 
     public function test_search_page_shows_matching_products(): void

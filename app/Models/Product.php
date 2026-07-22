@@ -22,6 +22,8 @@ class Product extends Model
         'description',
         'badge',
         'category',
+        'condition',
+        'status',
     ];
 
     protected $casts = [

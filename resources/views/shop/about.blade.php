@@ -4,9 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="REKA - Premium apparel. Comfortable, modern clothing built for everyday style.">
+    <meta name="description"
+        content="REKA - Premium clothing for everyday life. Modern, effortless style built for comfort and wearability.">
 
-    <title>REKA - Modern Clothing</title>
+    <title>About Us | REKA</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +17,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="page-shell font-sans antialiased bg-white text-reka-text selection:bg-reka-blue-light selection:text-reka-blue">
+<body class="font-sans antialiased bg-white text-reka-text selection:bg-reka-blue-light selection:text-reka-blue">
 
     <!-- ─── STICKY NAVIGATION BAR ─── -->
     <header id="navbar" class="premium-nav sticky top-0 w-full z-50">
@@ -40,7 +41,7 @@
                 <a href="/#reviews"
                     class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">Review</a>
                 <a href="/about"
-                    class="py-1 text-sm font-medium text-reka-text-secondary transition-colors hover:text-reka-blue">About Us</a>
+                    class="py-1 text-sm font-medium text-reka-blue transition-colors hover:text-reka-blue">About Us</a>
             </nav>
 
             <!-- Right: Search & Actions -->
@@ -123,6 +124,7 @@
                 <a href="/#featured" class="text-base font-semibold py-2 border-b border-reka-surface">Featured</a>
                 <a href="/#promotions" class="text-base font-semibold py-2 border-b border-reka-surface">Offers</a>
                 <a href="/#reviews" class="text-base font-semibold py-2 border-b border-reka-surface">Reviews</a>
+                <a href="/about" class="text-base font-semibold py-2 border-b border-reka-surface">About Us</a>
                 <form action="{{ route('search') }}" method="GET" class="pt-2 flex items-center relative">
                     <input type="text" name="query" placeholder="What are you looking for?"
                         class="w-full pl-10 pr-4 py-2.5 bg-reka-surface border border-reka-border rounded-lg text-sm focus:outline-none focus:border-reka-blue">
@@ -136,181 +138,201 @@
         </div>
     </header>
 
-    <!-- ─── BREADCRUMBS ─── -->
-    <div class="border-b border-reka-border bg-[color:rgba(247,245,239,0.8)] py-4">
-        <div class="mx-auto flex max-w-7xl items-center gap-2.5 px-4 text-sm text-reka-text-secondary sm:px-6 lg:px-8">
-            <a href="/" class="hover:text-reka-blue transition-colors">Home</a>
-            <svg class="w-3.5 h-3.5 text-reka-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-            <a href="/category" class="hover:text-reka-blue transition-colors">Category</a>
-            <svg class="w-3.5 h-3.5 text-reka-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-            <span class="text-reka-text font-semibold">{{ $product['name'] }}</span>
-        </div>
-    </div>
+    <main>
 
-    <!-- ─── PRODUCT PRESENTATION (Main Detail) ─── -->
-    <main class="page-shell-inner max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        {{-- Hero --}}
+        <section class="relative overflow-hidden bg-white">
+            <div class="mx-auto max-w-7xl px-6 py-24">
 
-            <!-- LEFT COLUMN: Image & Gallery (7 cols) -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
-                <!-- Large Product Image -->
-                <div
-                    class="surface-card group relative flex aspect-square items-center justify-center overflow-hidden p-8">
-                    <img id="main-product-image" src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
-                        class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
+                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-reka-blue">
+                    About REKA
+                </p>
 
-                    <!-- Zoom Overlay Indicator -->
-                    <span
-                        class="absolute bottom-4 right-4 bg-white/80 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm border border-reka-border text-reka-text pointer-events-none flex items-center gap-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                        </svg>
-                        Hover to Zoom
-                    </span>
-                </div>
+                <h1 class="mt-5 max-w-3xl text-5xl font-bold leading-tight">
+                    Fashion that blends
+                    <span class="text-reka-blue">comfort</span>,
+                    quality, and timeless design.
+                </h1>
 
-                <!-- Thumbnail Gallery -->
-                <div class="grid grid-cols-4 gap-4">
-                    @foreach ($product['image_urls'] as $index => $imageUrl)
-                        <button onclick="changeImage('{{ $imageUrl }}', this)"
-                            class="thumbnail-btn aspect-square overflow-hidden rounded-2xl border-2 bg-reka-surface p-2 transition-all focus:outline-none {{ $index === 0 ? 'border-reka-blue shadow-sm' : 'border-transparent hover:border-reka-border' }}">
+                <p class="mt-8 max-w-3xl text-lg leading-8 text-reka-text-secondary">
+                    A curated preloved marketplace — REKA facilitates transactions between users ,sellers and buyers of
+                    preloved items,, with its primary revenue coming from transaction commissions and service fees for
+                    item verification and curation, along with a consignment option for sellers who don’t want the
+                    hassle of photographing and uploading items themselves.
 
-                            <img src="{{ $imageUrl }}" alt="{{ $product['name'] }} thumbnail"
-                                class="w-full h-full object-cover">
-                        </button>
-                    @endforeach
-                </div>
+                    To become the number one trusted preloved platform for Indonesia’s younger generation to express
+                    themselves through sustainable fashion
+
+                </p>
             </div>
+        </section>
 
-            <!-- RIGHT COLUMN: Purchase Details & Form (5 cols) -->
-            <div class="lg:col-span-5 flex flex-col">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold uppercase tracking-[0.25em] text-reka-blue">Signature
-                        Apparel</span>
-                </div>
+        {{-- Our Story --}}
+        <section class="py-20">
+            <div class="mx-auto max-w-7xl px-6 grid gap-12 lg:grid-cols-2 items-center">
 
-                <h1 class="mt-4 text-3xl font-semibold tracking-[-0.02em] text-reka-text sm:text-4xl">
-                    {{ $product['name'] }}</h1>
-                <p class="mt-2 text-lg leading-8 text-reka-text-secondary">{{ $product['description'] }}</p>
+                <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    class="rounded-3xl object-cover shadow-lg" alt="REKA Store">
 
-                <div class="mt-6 border-b border-reka-border pb-6">
-                    <span class="text-3xl font-semibold text-reka-text">Rp
-                        {{ number_format($product['price'], 0, ',', '.') }}</span>
-                    <p class="mt-1 text-xs text-reka-text-muted">Includes local tax. Standard tailoring & delivery
-                        handled at checkout.</p>
-                    <div class="mt-4 flex flex-wrap items-center gap-3">
-                        @if ($product['is_available'] ?? false)
-                            <span
-                                class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">Tersedia</span>
-                        @else
-                            <span
-                                class="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-sm font-semibold text-rose-700">Barang
-                                Habis</span>
-                        @endif
-                        <span
-                            class="inline-flex items-center rounded-full border border-reka-border bg-reka-surface px-3 py-1 text-sm font-semibold text-reka-text-secondary">Single
-                            unit purchase</span>
-                    </div>
-                </div>
+                <div>
 
-                <div class="mt-6">
-                    <p class="text-sm leading-relaxed text-reka-text-secondary">
-                        {{ $product['description'] }}
+                    <p class="text-sm font-semibold uppercase tracking-[0.25em] text-reka-blue">
+                        Our Story
                     </p>
+
+                    <h2 class="mt-4 text-4xl font-bold">
+                        Built for everyday confidence.
+                    </h2>
+
+                    <p class="mt-6 leading-8 text-reka-text-secondary">
+                        REKA was founded with a simple vision: make quality fashion accessible
+                        without compromising style. We believe clothing should feel as good as
+                        it looks, allowing people to express themselves comfortably in every
+                        situation.
+                    </p>
+
+                    <p class="mt-5 leading-8 text-reka-text-secondary">
+                        From carefully curated materials to thoughtful product selection,
+                        every item reflects our commitment to modern design, lasting quality,
+                        and customer satisfaction.
+                    </p>
+
                 </div>
 
-                <form action="{{ route('cart.add') }}" method="POST" id="add-to-cart-form" class="mt-8 space-y-4">
-                    @csrf
-                    <input type="hidden" name="product_slug" value="{{ $product['slug'] }}">
-                    <input type="hidden" name="size" value="{{ $product['sizes'] }}">
+            </div>
+        </section>
 
-                    <div class="flex items-center gap-3">
-                        <label class="text-sm font-semibold text-reka-text-secondary">Size</label>
-                        <span
-                            class="rounded-full border border-reka-border bg-reka-surface px-4 py-2 text-sm font-medium text-reka-text-secondary">
-                            {{ $product['sizes'] }}
-                        </span>
+        {{-- Values --}}
+        <section class="bg-white py-20">
+
+            <div class="mx-auto max-w-7xl px-6">
+
+                <div class="text-center">
+
+                    <p class="text-sm uppercase tracking-[0.3em] text-reka-blue font-semibold">
+                        Our Values
+                    </p>
+
+                    <h2 class="mt-4 text-4xl font-bold">
+                        What makes REKA different
+                    </h2>
+
+                </div>
+
+                <div class="mt-14 grid gap-8 md:grid-cols-3">
+
+                    <div class="rounded-3xl border border-reka-border bg-reka-surface p-8">
+                        <div class="text-4xl">👕</div>
+
+                        <h3 class="mt-6 text-xl font-semibold">
+                            Premium Quality
+                        </h3>
+
+                        <p class="mt-3 leading-7 text-reka-text-secondary">
+                            Carefully selected products made from comfortable materials with
+                            long-lasting durability.
+                        </p>
                     </div>
-                    <div class="flex flex-col gap-3 sm:flex-row">
-                        <div
-                            class="inline-flex items-center rounded-full border border-reka-border bg-reka-surface px-4 py-3 text-sm font-semibold text-reka-text-secondary">
-                            1 unit
-                        </div>
-                        <input type="hidden" name="quantity" id="quantity-input" value="1">
-                        @if ($product['is_available'] ?? false)
-                            <button type="submit"
-                                class="add-to-cart-btn flex-grow inline-flex items-center justify-center gap-2 btn-primary px-6 py-4 rounded-full focus:outline-none">
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                </svg>
-                                Add to Cart
-                            </button>
-                        @else
-                            <span
-                                class="flex-grow inline-flex items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-6 py-4 text-sm font-semibold text-rose-700">
-                                Barang Habis
-                            </span>
-                        @endif
+
+                    <div class="rounded-3xl border border-reka-border bg-reka-surface p-8">
+
+                        <div class="text-4xl">✨</div>
+
+                        <h3 class="mt-6 text-xl font-semibold">
+                            Modern Design
+                        </h3>
+
+                        <p class="mt-3 leading-7 text-reka-text-secondary">
+                            Minimalist collections inspired by contemporary trends while
+                            remaining timeless.
+                        </p>
+
                     </div>
-                </form>
-                <div class="mt-3 flex items-center gap-3">
-                    <form action="{{ route('wishlist.add') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="product_slug" value="{{ $product['slug'] }}">
-                        <button type="submit"
-                            class="wishlist-btn flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-reka-border bg-white shadow-sm transition-all hover:scale-105 hover:bg-reka-surface active:scale-95"
-                            aria-label="Add to Wishlist">
-                            <svg class="pointer-events-none h-6 w-6 text-gray-500" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
-                    </form>
 
-                    @if ($product['is_available'] ?? false)
-                        <button type="button"
-                            onclick="const f = document.getElementById('add-to-cart-form'); f.action = '{{ route('buy.now') }}'; f.submit();"
-                            class="block flex-1 rounded-full bg-reka-yellow px-6 py-4 text-center text-sm font-semibold text-reka-text transition-all hover:bg-reka-yellow-dark focus:outline-none">
-                            Buy It Now
-                        </button>
-                    @else
-                        <span
-                            class="block flex-1 cursor-not-allowed rounded-full border border-rose-200 bg-rose-50 px-6 py-4 text-center text-sm font-semibold text-rose-700">
-                            Barang Habis
-                        </span>
-                    @endif
+                    <div class="rounded-3xl border border-reka-border bg-reka-surface p-8">
+
+                        <div class="text-4xl">❤️</div>
+
+                        <h3 class="mt-6 text-xl font-semibold">
+                            Customer First
+                        </h3>
+
+                        <p class="mt-3 leading-7 text-reka-text-secondary">
+                            We prioritize excellent service, secure shopping,
+                            and a satisfying customer experience from start to finish.
+                        </p>
+
+                    </div>
+
                 </div>
 
-                <!-- Small Trust indicators -->
-                <div
-                    class="mt-6 flex flex-col gap-2.5 text-xs text-reka-text-secondary border-t border-reka-border pt-6">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-reka-blue shrink-0" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                        </svg>
-                        365-day return policy — return items open or unopened
-                    </span>
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-reka-blue shrink-0" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        Expert garment care tips for lasting color and shape
-                    </span>
-                </div>
             </div>
 
-        </div>
+        </section>
+
+        {{-- Statistics --}}
+        <section class="py-20">
+
+            <div class="mx-auto max-w-7xl px-6">
+
+                <div class="grid gap-8 text-center md:grid-cols-4">
+
+                    <div>
+                        <h3 class="text-5xl font-bold text-reka-blue">5K+</h3>
+                        <p class="mt-2 text-reka-text-secondary">
+                            Happy Customers
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-5xl font-bold text-reka-blue">25+</h3>
+                        <p class="mt-2 text-reka-text-secondary">
+                            Fashion Products
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-5xl font-bold text-reka-blue">98%</h3>
+                        <p class="mt-2 text-reka-text-secondary">
+                            Customer Satisfaction
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-5xl font-bold text-reka-blue">24/7</h3>
+                        <p class="mt-2 text-reka-text-secondary">
+                            Customer Support
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        {{-- CTA --}}
+        <section class="pb-24">
+
+            <div class="mx-auto max-w-5xl rounded-[40px] bg-reka-blue px-8 py-16 text-center text-white">
+
+                <h2 class="text-4xl font-bold">
+                    Discover Your Next Favorite Outfit
+                </h2>
+
+                <p class="mx-auto mt-6 max-w-2xl text-lg text-blue-100">
+                    Explore our latest collections and experience fashion that
+                    combines comfort, quality, and timeless style.
+                </p>
+
+                <a href="{{ route('category') }}"
+                    class="mt-10 inline-flex rounded-full bg-reka-yellow px-8 py-4 font-semibold text-reka-text transition hover:scale-105">
+                    Shop Now
+                </a>
+
+            </div>
+
+        </section>
 
     </main>
 
@@ -362,7 +384,8 @@
                 <ul class="flex flex-col gap-3.5 text-sm text-gray-400">
                     <li><a href="/#categories" class="hover:text-white transition-colors">Women&apos;s Essentials</a>
                     </li>
-                    <li><a href="/#categories" class="hover:text-white transition-colors">Men&apos;s Outerwear</a></li>
+                    <li><a href="/#categories" class="hover:text-white transition-colors">Men&apos;s Outerwear</a>
+                    </li>
                     <li><a href="/#categories" class="hover:text-white transition-colors">Basics & Layers</a></li>
                     <li><a href="/#categories" class="hover:text-white transition-colors">Accessories</a></li>
                     <li><a href="/#categories" class="hover:text-white transition-colors">Lifestyle Pieces</a></li>
@@ -412,7 +435,7 @@
             class="max-w-7xl mx-auto px-6 border-t border-gray-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <!-- Copyright -->
             <div>
-                <span class="text-xs text-gray-500">&copy; 2026 REKA. All rights reserved.</span>
+                <span class="text-xs text-gray-500">&copy; {{ date('Y') }} REKA. All rights reserved.</span>
             </div>
 
             <!-- Payment Badges -->
@@ -437,21 +460,6 @@
         </div>
     </footer>
 
-    <!-- Interactive Scripts for Details Page -->
-    <script>
-        // Gallery switcher
-        function changeImage(src, btn) {
-            document.getElementById('main-product-image').src = src;
-            // Remove active border from all thumbs
-            document.querySelectorAll('.thumbnail-btn').forEach(b => {
-                b.classList.remove('border-reka-blue');
-                b.classList.add('border-transparent');
-            });
-            // Add active border to this thumb
-            btn.classList.remove('border-transparent');
-            btn.classList.add('border-reka-blue');
-        }
-    </script>
 </body>
 
 </html>

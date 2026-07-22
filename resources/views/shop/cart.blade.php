@@ -89,7 +89,7 @@
                     <a href="{{ route('category') }}" class="flex items-center justify-center rounded-full border border-reka-border px-4 py-3 text-sm font-semibold text-reka-text transition hover:bg-reka-surface">
                         Continue Shopping
                     </a>
-                    <a href="{{ route('checkout') }}" class="flex items-center justify-center rounded-full bg-reka-blue px-4 py-3 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">
+                    <a href="{{ route('checkout', ['mode' => 'cart']) }}" class="flex items-center justify-center rounded-full bg-reka-blue px-4 py-3 text-sm font-semibold text-white transition hover:bg-reka-blue-dark">
                         Checkout
                     </a>
                 </div>

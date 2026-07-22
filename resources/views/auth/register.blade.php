@@ -36,7 +36,7 @@
 
                         <div>
                             <label for="phone" class="mb-2 block text-sm font-medium text-reka-text-secondary">Phone Number</label>
-                            <input id="phone" name="phone" type="tel" placeholder="+62 812 3456 7890" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 text-sm outline-none transition focus:border-reka-blue focus:bg-white">
+                            <input id="phone" name="phone" type="tel" value="{{ old('phone') }}" placeholder="+62 812 3456 7890" class="w-full rounded-2xl border border-reka-border bg-reka-surface px-4 py-3 text-sm outline-none transition focus:border-reka-blue focus:bg-white" required>
                         </div>
 
                         <div>

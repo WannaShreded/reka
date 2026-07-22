@@ -8,10 +8,12 @@ use App\Models\Product;
 use App\Models\User;
 use App\Services\MidtransService;
 use Database\Seeders\ProductSeeder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
@@ -117,12 +119,12 @@ class ShopController extends Controller
 
         $product = $productModel->toArray();
 
-        if (! in_array($data['size'], $product['sizes'] ?? [], true)) {
+        if ($data['size'] !== $product['sizes']) {
             return back()->withErrors(['size' => 'The selected size is unavailable.']);
         }
 
-        if ($product['stock'] < $data['quantity']) {
-            return back()->withErrors(['stock' => 'Not enough stock available.']);
+        if ($product['stock'] < $data['quantity'] || ($product['status'] ?? 'available') !== 'available') {
+            return back()->withErrors(['stock' => 'Product is no longer available.']);
         }
 
         $cart = $this->getCart();
@@ -157,6 +159,56 @@ class ShopController extends Controller
         return redirect()->back()->with('success', 'Added to cart successfully.');
     }
 
+    public function buyNow(Request $request)
+    {
+        $this->ensureProductsAvailable();
+
+        $data = $request->validate([
+            'product_slug' => ['required', 'string'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:1'],
+            'size' => ['required', 'string'],
+            'color' => ['nullable', 'string'],
+        ]);
+
+        if ($request->user()?->isAdmin()) {
+            return redirect()->route('admin-dashboard');
+        }
+
+        $productModel = Product::where('slug', $data['product_slug'])->first();
+        if (! $productModel) {
+            return back()->withErrors(['product' => 'Product not found.']);
+        }
+
+        $product = $productModel->toArray();
+
+        if ($data['size'] !== $product['sizes']) {
+            return back()->withErrors(['size' => 'The selected size is unavailable.']);
+        }
+
+        if ($product['stock'] < $data['quantity'] || ($product['status'] ?? 'available') !== 'available') {
+            return back()->withErrors(['stock' => 'Product is no longer available.']);
+        }
+
+        $key = $data['product_slug'].':'.$data['size'].':'.($data['color'] ?? '');
+        $buyNowItem = [
+            $key => [
+                'product_slug' => $data['product_slug'],
+                'name' => $product['name'],
+                'price' => $product['price'],
+                'size' => $data['size'],
+                'color' => $data['color'] ?? null,
+                'quantity' => 1,
+                'image' => $product['image'],
+                'image_url' => $this->imageUrl($product['image']),
+            ],
+        ];
+
+        Session::put('buy_now_items', $buyNowItem);
+        Session::put('checkout_mode', 'buy_now');
+
+        return redirect()->route('checkout');
+    }
+
     public function updateCart(Request $request, string $key)
     {
         $data = $request->validate([
@@ -184,8 +236,12 @@ class ShopController extends Controller
         return redirect()->back()->with('success', 'Item removed from cart.');
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
+        if ($request->has('mode')) {
+            Session::put('checkout_mode', $request->query('mode'));
+        }
+
         if (! Auth::check()) {
             Session::put('checkout_required', true);
 
@@ -196,10 +252,17 @@ class ShopController extends Controller
             return redirect()->route('admin-dashboard');
         }
 
-        $cart = $this->getCart();
-        $items = $cart['items'] ?? [];
+        $mode = Session::get('checkout_mode', 'cart');
+
+        if ($mode === 'buy_now') {
+            $items = Session::get('buy_now_items', []);
+        } else {
+            $cart = $this->getCart();
+            $items = $cart['items'] ?? [];
+        }
+
         if (empty($items)) {
-            return redirect()->route('cart')->withErrors(['cart' => 'Your cart is empty.']);
+            return redirect()->route('cart')->withErrors(['cart' => 'Your checkout session is empty.']);
         }
 
         $items = $this->presentCartItems($items);
@@ -235,10 +298,17 @@ class ShopController extends Controller
             'payment_method' => ['required', 'string', Rule::in(['credit_card', 'bank_transfer', 'e_wallet', 'cod'])],
         ]);
 
-        $cart = $this->getCart();
-        $items = $cart['items'] ?? [];
+        $mode = Session::get('checkout_mode', 'cart');
+
+        if ($mode === 'buy_now') {
+            $items = Session::get('buy_now_items', []);
+        } else {
+            $cart = $this->getCart();
+            $items = $cart['items'] ?? [];
+        }
+
         if (empty($items)) {
-            return redirect()->route('cart')->withErrors(['cart' => 'Your cart is empty.']);
+            return redirect()->route('cart')->withErrors(['cart' => 'Your checkout session is empty.']);
         }
 
         try {
@@ -281,7 +351,7 @@ class ShopController extends Controller
                         'image' => $product->image,
                     ]);
 
-                    $product->decrement('stock', $quantity);
+                    $product->update(['status' => 'reserved']);
                 }
 
                 return $order;
@@ -290,7 +360,12 @@ class ShopController extends Controller
             return redirect()->route('cart')->withErrors(['cart' => $exception->getMessage()]);
         }
 
-        $this->persistCart([]);
+        if ($mode === 'buy_now') {
+            Session::forget('buy_now_items');
+            Session::forget('checkout_mode');
+        } else {
+            $this->persistCart([]);
+        }
 
         try {
             $snap = $midtrans->createSnapTransaction($order->load('orderItems'));
@@ -306,10 +381,14 @@ class ShopController extends Controller
 
             return redirect()->away($snap['redirect_url']);
         } catch (\Throwable $exception) {
-            $order->update([
-                'payment_status' => 'failed',
-                'status' => 'payment_failed',
+
+            Log::error('Midtrans snap transaction failed', [
+                'order_id' => $order->id,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
             ]);
+
+            $midtrans->applyOrderStatus($order, 'failed', 'payment_failed');
 
             return redirect()
                 ->route('order-confirmation', ['order' => $order->id])
@@ -417,12 +496,12 @@ class ShopController extends Controller
         return redirect()->back()->with('success', 'Removed from wishlist.');
     }
 
-    public function cartCount(): \Illuminate\Http\JsonResponse
+    public function cartCount(): JsonResponse
     {
         return response()->json(['count' => count($this->getCart()['items'] ?? [])]);
     }
 
-    public function wishlistCount(): \Illuminate\Http\JsonResponse
+    public function wishlistCount(): JsonResponse
     {
         return response()->json(['count' => count($this->getWishlist())]);
     }
@@ -500,23 +579,33 @@ class ShopController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:users,email'],
+            'phone' => ['required', 'string', 'max:30', 'regex:/^\+?[0-9\s\-\(\)]+$/'],
             'password' => ['required', 'min:6', 'confirmed'],
         ]);
 
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name' => trim($data['name']),
+            'email' => trim($data['email']),
+            'phone' => trim($data['phone']),
             'password' => Hash::make($data['password']),
         ]);
 
         Auth::login($user);
         $this->mergeGuestCart();
+        $checkoutRequired = Session::pull('checkout_required', false);
 
         if ($user->isAdmin()) {
             return redirect()->route('admin-dashboard')->with('success', 'Account created successfully.');
         }
 
-        return redirect()->route('dashboard')->with('success', 'Account created successfully.');
+        $redirectTo = $checkoutRequired ? route('checkout') : route('dashboard');
+
+        return redirect()->intended($redirectTo)->with('success', 'Account created successfully.');
+    }
+
+    public function about()
+    {
+        return view('shop.about');
     }
 
     private function ensureProductsAvailable(): void
@@ -654,7 +743,7 @@ class ShopController extends Controller
         $data['images'] = $images;
         $data['image_url'] = $this->imageUrl($data['image'] ?? null);
         $data['image_urls'] = array_map(fn (?string $image) => $this->imageUrl($image), $images);
-        $data['is_available'] = (int) ($data['stock'] ?? 0) > 0;
+        $data['is_available'] = ($data['status'] ?? 'available') === 'available' && (int) ($data['stock'] ?? 0) > 0;
         $data['availability_label'] = $data['is_available'] ? 'Tersedia' : 'Barang Habis';
 
         return $data;
@@ -667,8 +756,9 @@ class ShopController extends Controller
             $stock = $product?->stock ?? 0;
 
             $items[$key]['stock'] = $stock;
-            $items[$key]['is_available'] = (int) $stock > 0;
-            $items[$key]['availability_label'] = (int) $stock > 0 ? 'Tersedia' : 'Barang Habis';
+            $isAvailable = ($product?->status ?? 'available') === 'available' && (int) $stock > 0;
+            $items[$key]['is_available'] = $isAvailable;
+            $items[$key]['availability_label'] = $isAvailable ? 'Tersedia' : 'Barang Habis';
             $items[$key]['image_url'] = $item['image_url'] ?? $this->imageUrl($item['image'] ?? null);
         }
 
